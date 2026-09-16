@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-16 draft 5",
+    "version": "2026-09-16 draft 6",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -85,7 +85,7 @@
       "weeks": [3, 6],
       "layer": "secondary",
       "cycle": 0,
-      "title": "Keep the ledger current; feed the Launch Brief and Walkthrough/FAQ",
+      "title": "Keep the Product Delivery Ledger current; feed the Launch Brief and Walkthrough/FAQ",
       "detail": "Product maintains the Product Delivery Ledger item for each committed piece of work and contributes product truth to the downstream documents as delivery gets more precise."
     },
     {
