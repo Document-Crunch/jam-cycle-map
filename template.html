@@ -186,6 +186,28 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .scrim{position:fixed;inset:0;z-index:19;display:none}
 .scrim.open{display:block}
 
+[hidden]{display:none!important}
+.edited{color:var(--muted);font-size:12px}
+.edit-toggle{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);cursor:pointer}
+.edit-toggle input{margin:0}
+body.editing .edit-toggle{border-color:var(--program);color:var(--program);font-weight:500}
+.edit-note{font-size:12px;color:var(--muted);background:var(--program-soft);border-radius:6px;padding:8px 10px;margin:0 0 12px}
+.form{display:grid;gap:10px}
+.form label{display:grid;gap:4px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.form input,.form textarea,.form select{font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;text-transform:none;letter-spacing:0;width:100%}
+.form textarea{min-height:88px;resize:vertical;line-height:1.4}
+.form .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.form .actions{display:flex;gap:8px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.btn{padding:7px 14px;border-radius:6px;border:1px solid var(--line);background:var(--surface);font-weight:500}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.quiet{border-color:transparent;color:var(--muted)}
+.form .err{color:#B42318;font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:8px;font-size:13px;z-index:30;box-shadow:var(--shadow);max-width:90vw}
+.lane-label{cursor:default}
+body.editing .lane-label{cursor:pointer}
+body.editing .lane-label:hover{background:var(--hover)}
 @media (max-width:640px){
   .bounds{grid-template-columns:1fr}
   .fn-weeks{grid-template-columns:repeat(2,1fr)}
@@ -196,6 +218,8 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
   <div class="top-row">
     <h1>Jam Cycle Map</h1>
     <span class="version mono" id="version"></span>
+    <span class="edited mono" id="edited"></span>
+    <label class="edit-toggle" id="edit-toggle" hidden><input type="checkbox" id="edit-mode"> Edit</label>
   </div>
   <nav class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" data-view="cycle" aria-selected="true">The cycle</button>
@@ -243,12 +267,14 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 </main>
 
 <div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" hidden></div>
 <aside class="drawer" id="drawer" aria-live="polite">
   <button class="close" id="drawer-close" aria-label="Close">×</button>
   <div id="drawer-body"></div>
 </aside>
 
 <script id="data" type="application/json">__DATA__</script>
+<script id="tpl" type="application/json">__TPL__</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const W = D.meta.cycleWeeks;
@@ -293,7 +319,7 @@ function laneMapHTML(lanes){
   h += '</div>';
   lanes.forEach(l=>{
     h += `<div class="lane" style="--lc:var(--${l.color});--lsoft:var(--${l.color}-soft)">`;
-    h += `<div class="lane-label"><b>${esc(l.name)}</b>${l.flag?`<span class="flag">${esc(l.flag)}</span>`:''}<span class="sum">${esc(l.summary)}</span></div>`;
+    h += `<div class="lane-label" data-lane="${l.id}"><b>${esc(l.name)}</b>${l.flag?`<span class="flag">${esc(l.flag)}</span>`:''}<span class="sum">${esc(l.summary)}</span></div>`;
     D.activities.map((a,i)=>({a,i})).filter(x=>x.a.lane===l.id).forEach(({a,i})=>{
       const row = a.layer==='primary'?1:2;
       h += `<button class="blk ${a.layer} ${cycClass(a.cycle)}" style="grid-row:${row};grid-column:${a.weeks[0]+1} / ${a.weeks[1]+2}" data-act="${i}">${a.cycle!==0?`<span class="cyc">${cycLabel(a.cycle)}</span>`:''}<span>${esc(a.title)}</span></button>`;
@@ -364,10 +390,21 @@ function artHTML(a){
   <p>${esc(a.purpose)}</p><dl class="kv"><dt>Owner</dt><dd>${esc(a.owner)}</dd><dt>Progression</dt><dd><ul>${a.checkpoints.map(c=>`<li>${boundaryName(c.at)}: ${esc(c.label)}${c.readiness?` <b>(${esc(c.readiness)})</b>`:''}</li>`).join('')}${a.after?`<li>${esc(a.after)}</li>`:''}</ul></dd></dl>`;
 }
 
+let sel = null;
+function renderSel(){
+  if(!sel) return;
+  if(EDIT.on) { openDrawer(EDIT.form(sel)); return; }
+  if(sel.kind==='ms') openDrawer(msHTML(D.milestones.find(m=>m.id===sel.id)));
+  else if(sel.kind==='act') openDrawer(actHTML(D.activities[sel.i]));
+  else if(sel.kind==='art') openDrawer(artHTML(D.artifacts[sel.i]));
+  else if(sel.kind==='lane') openDrawer(`<div class="eyebrow">Function</div><h2>${esc(laneById[sel.id].name)}</h2><p>${esc(laneById[sel.id].summary)}</p>`);
+}
 document.addEventListener('click', e=>{
-  const ms = e.target.closest('[data-ms]'); if(ms){ openDrawer(msHTML(D.milestones.find(m=>m.id===ms.dataset.ms))); return; }
-  const act = e.target.closest('[data-act]'); if(act){ openDrawer(actHTML(D.activities[+act.dataset.act])); return; }
-  const art = e.target.closest('[data-art]'); if(art){ openDrawer(artHTML(D.artifacts[+art.dataset.art])); return; }
+  if(e.target.closest('#drawer')) return;
+  const ms = e.target.closest('[data-ms]'); if(ms){ sel={kind:'ms', id:ms.dataset.ms}; renderSel(); return; }
+  const act = e.target.closest('[data-act]'); if(act){ sel={kind:'act', i:+act.dataset.act}; renderSel(); return; }
+  const art = e.target.closest('[data-art]'); if(art){ sel={kind:'art', i:+art.dataset.art}; renderSel(); return; }
+  const lane = e.target.closest('[data-lane]'); if(lane && EDIT.on){ sel={kind:'lane', id:lane.dataset.lane}; renderSel(); return; }
 });
 
 /* ---------- this week ---------- */
@@ -397,6 +434,126 @@ function buildFn(){
   document.getElementById('fn-map').innerHTML = laneMapHTML([l]);
 }
 document.getElementById('fn-pick').addEventListener('click', e=>{ const b=e.target.closest('[data-fn]'); if(b){ curFn=b.dataset.fn; buildFn(); } });
+
+/* ---------- editing (writers of the Claude artifact only) ---------- */
+const EDIT = { on:false, art:null };
+const KINDS = ['org','build','leadership','gtm','team','gate'];
+const toast = (msg, ms=3200) => { const el=document.getElementById('toast'); el.textContent=msg; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true, ms); };
+const field = (label, name, val, type='input', attrs='') => type==='textarea'
+  ? `<label>${label}<textarea name="${name}" ${attrs}>${esc(val??'')}</textarea></label>`
+  : `<label>${label}<input name="${name}" value="${esc(val??'')}" ${attrs}></label>`;
+const select = (label, name, val, opts) => `<label>${label}<select name="${name}">${opts.map(([v,l])=>`<option value="${v}" ${String(v)===String(val)?'selected':''}>${l}</option>`).join('')}</select></label>`;
+const weekOpts = Array.from({length:W},(_,i)=>[i+1,'Week '+(i+1)]);
+const boundaryOpts = Array.from({length:W+1},(_,b)=>[b, boundaryName(b)]);
+const lines = arr => (arr||[]).join('\n');
+const unlines = s => s.split('\n').map(x=>x.trim()).filter(Boolean);
+
+EDIT.form = function(s){
+  let title='', body='';
+  if(s.kind==='act'){ const a=D.activities[s.i]; title='Edit activity';
+    body = field('Title','title',a.title) + field('Description','detail',a.detail,'textarea')
+      + `<div class="row">${select('From','w0',a.weeks[0],weekOpts)}${select('To','w1',a.weeks[1],weekOpts)}</div>`
+      + `<div class="row3">${select('Lane','lane',a.lane,D.lanes.map(l=>[l.id,l.name]))}${select('Band','layer',a.layer,[['primary','Primary'],['secondary','Secondary']])}${select('Cycle','cycle',a.cycle,[[0,'This cycle'],[1,'Next cycle (+1)'],[-1,'Prior cycle (−1)']])}</div>`; }
+  else if(s.kind==='ms'){ const m=D.milestones.find(x=>x.id===s.id); title='Edit milestone';
+    body = field('Name','name',m.name) + field('Description','detail',m.detail,'textarea') + field('Who attends','audience',m.audience)
+      + field('Inputs (one per line)','inputs',lines(m.inputs),'textarea') + field('Outcomes (one per line)','outcomes',lines(m.outcomes),'textarea')
+      + `<div class="row3">${select('When','at',m.at,boundaryOpts)}${select('Audience type','kind',m.kind,KINDS.map(k=>[k,KIND_LABEL[k]||k]))}${select('Cycle','cycle',m.cycle,[[0,'This cycle'],[1,'Next cycle (+1)']])}</div>`
+      + select('Status','status',m.status||'',[['','Normal'],['optional','Optional']]); }
+  else if(s.kind==='art'){ const a=D.artifacts[s.i]; title='Edit document';
+    body = field('Name','name',a.name) + field('Owner','owner',a.owner) + field('Purpose','purpose',a.purpose,'textarea')
+      + field('Checkpoints (one per line: week boundary | label | readiness)','checkpoints', a.checkpoints.map(c=>[c.at,c.label,c.readiness||''].join(' | ')).join('\n'),'textarea')
+      + field('After the cycle','after',a.after||'') + select('Cycle','cycle',a.cycle,[[0,'This cycle'],[1,'Next cycle (+1)']]); }
+  else if(s.kind==='lane'){ const l=laneById[s.id]; title='Edit function';
+    body = field('Name','name',l.name) + field('Summary (shown on hover)','summary',l.summary,'textarea'); }
+  const undo = (D.history||[]).length ? `<button type="button" class="btn quiet" id="undo-btn" title="${esc(D.history[D.history.length-1].what)}">Undo last save</button>` : '';
+  return `<div class="eyebrow">${title}</div><p class="edit-note">Saving publishes a new version of this artifact. The company page updates when you ask Claude to publish.</p>
+  <form class="form" id="edit-form">${body}<div class="err" id="edit-err" hidden></div><div class="actions"><button type="submit" class="btn primary" id="save-btn">Save</button><button type="button" class="btn" id="cancel-btn">Cancel</button>${undo}</div></form>`;
+};
+
+EDIT.apply = function(s, f){
+  const g = n => (f.get(n)??'').toString().trim();
+  let before, what;
+  if(s.kind==='act'){ const a=D.activities[s.i]; before=JSON.parse(JSON.stringify(a)); what='activity "'+a.title+'"';
+    const w0=+g('w0'), w1=+g('w1'); if(w1<w0) throw new Error('"To" week must not be before "From" week.');
+    if(!g('title')) throw new Error('Title is required.');
+    Object.assign(a,{title:g('title'),detail:g('detail'),weeks:[w0,w1],lane:g('lane'),layer:g('layer'),cycle:+g('cycle')}); }
+  else if(s.kind==='ms'){ const m=D.milestones.find(x=>x.id===s.id); before=JSON.parse(JSON.stringify(m)); what='milestone "'+m.name+'"';
+    if(!g('name')) throw new Error('Name is required.');
+    Object.assign(m,{name:g('name'),detail:g('detail'),audience:g('audience'),inputs:unlines(g('inputs')),outcomes:unlines(g('outcomes')),at:+g('at'),kind:g('kind'),cycle:+g('cycle')});
+    if(g('status')) m.status=g('status'); else delete m.status; }
+  else if(s.kind==='art'){ const a=D.artifacts[s.i]; before=JSON.parse(JSON.stringify(a)); what='document "'+a.name+'"';
+    if(!g('name')) throw new Error('Name is required.');
+    const cps = unlines(g('checkpoints')).map(line=>{ const [at,label,readiness]=line.split('|').map(x=>x.trim()); const c={at:+at,label:label||''}; if(isNaN(c.at)||c.at<0||c.at>W) throw new Error('Each checkpoint must start with a week boundary from 0 to '+W+'.'); if(readiness) c.readiness=readiness; return c; });
+    if(!cps.length) throw new Error('At least one checkpoint is required.');
+    Object.assign(a,{name:g('name'),owner:g('owner'),purpose:g('purpose'),checkpoints:cps,cycle:+g('cycle')});
+    if(g('after')) a.after=g('after'); else delete a.after; }
+  else if(s.kind==='lane'){ const l=laneById[s.id]; before=JSON.parse(JSON.stringify(l)); what='function "'+l.name+'"';
+    if(!g('name')) throw new Error('Name is required.');
+    Object.assign(l,{name:g('name'),summary:g('summary')}); }
+  D.history = (D.history||[]).concat([{ts:new Date().toISOString(), sel:s, before, what}]).slice(-10);
+};
+
+EDIT.undo = function(){
+  const h = (D.history||[]).pop(); if(!h) return;
+  if(h.sel.kind==='act') D.activities[h.sel.i]=h.before;
+  else if(h.sel.kind==='ms'){ const i=D.milestones.findIndex(x=>x.id===h.sel.id); if(i>=0) D.milestones[i]=h.before; else D.milestones.push(h.before); }
+  else if(h.sel.kind==='art') D.artifacts[h.sel.i]=h.before;
+  else if(h.sel.kind==='lane'){ const i=D.lanes.findIndex(x=>x.id===h.sel.id); if(i>=0) D.lanes[i]=h.before; }
+  return h.what;
+};
+
+EDIT.render = function(){
+  const tpl = JSON.parse(document.getElementById('tpl').textContent);
+  const escS = s => s.replace(/<\//g,'<\\/');
+  D.meta.lastEdited = new Date().toISOString().slice(0,10);
+  const page = tpl.replace('__DATA__', escS(JSON.stringify(D))).replace('__TPL__', escS(JSON.stringify(tpl)));
+  return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body style="margin:0">' + page + '</body></html>';
+};
+
+EDIT.publish = async function(label){
+  const html = EDIT.render();
+  try{ sessionStorage.setItem('jam-toast', label); }catch(_){}
+  try{
+    await EDIT.art.publish(html);
+    toast('Saved. Reloading…');
+  }catch(err){
+    try{ sessionStorage.removeItem('jam-toast'); }catch(_){}
+    const code = err && err.code;
+    if(code==='conflict'){ toast('Someone saved a newer version first. Reloading to it; your change was not applied.', 6000); return; }
+    if(code==='not_writer'||code==='not_granted'||code==='not_declared'){ EDIT.disable('This view is read-only.'); return; }
+    if(code==='too_large'){ throw new Error('The page is too large to save.'); }
+    throw new Error((err&&err.message)||'Save failed. Try again in a moment.');
+  }
+};
+
+EDIT.disable = function(msg){ EDIT.on=false; document.body.classList.remove('editing'); document.getElementById('edit-toggle').hidden=true; if(msg) toast(msg, 5000); if(sel) renderSel(); };
+
+document.addEventListener('submit', async e=>{
+  const f = e.target.closest('#edit-form'); if(!f) return; e.preventDefault();
+  const err = document.getElementById('edit-err'), btn = document.getElementById('save-btn');
+  err.hidden=true; btn.disabled=true; btn.textContent='Saving…';
+  const snapshot = JSON.stringify(D);
+  try{ EDIT.apply(sel, new FormData(f)); await EDIT.publish('Saved'); }
+  catch(ex){ Object.assign(D, JSON.parse(snapshot)); err.textContent=ex.message; err.hidden=false; btn.disabled=false; btn.textContent='Save'; }
+});
+document.addEventListener('click', async e=>{
+  if(e.target.id==='cancel-btn'){ closeDrawer(); return; }
+  if(e.target.id==='undo-btn'){
+    const what = EDIT.undo(); e.target.disabled=true; e.target.textContent='Undoing…';
+    try{ await EDIT.publish('Undid the last save to '+what); }catch(ex){ toast(ex.message, 5000); e.target.disabled=false; e.target.textContent='Undo last save'; }
+  }
+});
+document.getElementById('edit-mode').addEventListener('change', e=>{ EDIT.on=e.target.checked; document.body.classList.toggle('editing', EDIT.on); if(sel) renderSel(); else if(EDIT.on) toast('Edit mode: click any block, milestone, document or function name to change it.', 4500); });
+
+(async()=>{
+  try{ const m = sessionStorage.getItem('jam-toast'); if(m){ sessionStorage.removeItem('jam-toast'); toast(m); } }catch(_){}
+  if(D.meta.lastEdited) document.getElementById('edited').textContent = '· edited '+D.meta.lastEdited;
+  if(!window.claude || typeof window.claude.use!=='function') return;
+  const art = await window.claude.use('artifact'); if(!art) return;
+  const user = await window.claude.use('user');
+  if(user && !(await user.canEdit())) return;
+  EDIT.art = art; document.getElementById('edit-toggle').hidden = false;
+})();
 
 /* ---------- tabs ---------- */
 document.getElementById('tabs').addEventListener('click', e=>{
