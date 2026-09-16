@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-16 draft 4",
+    "version": "2026-09-16 draft 5",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -34,7 +34,7 @@
       "id": "engineering",
       "name": "Engineering",
       "color": "engineering",
-      "summary": "Leads the delivery pod. Turns a selected opportunity into an implementation plan, then delivers with protected focus for six weeks."
+      "summary": "Leads the delivery pod. Turns a selected opportunity into a Pod Delivery Plan, then delivers with protected focus for six weeks."
     },
     {
       "id": "design",
@@ -62,7 +62,7 @@
       "layer": "primary",
       "cycle": 0,
       "title": "Refine selected opportunities with pods",
-      "detail": "Each PM works with the pods that picked their opportunity to turn the problem space into an implementation plan. Sessions are pod plus PM. Ends with the Engineering Pitch-back."
+      "detail": "Each PM works with the pods that picked their opportunity to turn the problem space into a Pod Delivery Plan. Sessions are pod plus PM. Ends with the Engineering Pitch-back."
     },
     {
       "lane": "product",
@@ -110,7 +110,7 @@
       "layer": "primary",
       "cycle": 0,
       "title": "Cooldown and ramp-up",
-      "detail": "Self-led. Cooldown is whatever gets the team refreshed: tech debt, a retro, a half day off. Ramp-up is planning with the PM, breaking down the opportunity, and writing the implementation plan. The one thing that must be true at the end: an implementation plan Product is aligned with."
+      "detail": "Self-led. Cooldown is whatever gets the team refreshed: tech debt, a retro, a half day off. Ramp-up is planning with the PM, breaking down the opportunity, and writing the Pod Delivery Plan. The one thing that must be true at the end: a Pod Delivery Plan Product is aligned with."
     },
     {
       "lane": "engineering",
@@ -142,7 +142,7 @@
       "layer": "secondary",
       "cycle": 0,
       "title": "Refine with the pod and PM",
-      "detail": "Design takes part in pod refinement sessions and the Pitch-back so the implementation plan and the design direction agree."
+      "detail": "Design takes part in pod refinement sessions and the Pitch-back so the Pod Delivery Plan and the design direction agree."
     },
     {
       "lane": "design",
@@ -262,7 +262,7 @@
       "layer": "primary",
       "cycle": 0,
       "title": "Run enablement sessions; docs to about 80%",
-      "detail": "Sessions at the start of week 7 and week 8 bring the full CS and Sales teams through what is coming. Recorded and added to the docs. We call the business enabled at this point even though the final version is not yet in production."
+      "detail": "Two sessions, at the start of week 7 and week 8, bring the full CS and Sales teams through what is coming. Each project is covered in one of them; two dates give enough time for everything and space between. Recorded and added to the docs. We call a project about 80% enabled after its session, since the final version is not yet in production."
     },
     {
       "lane": "program",
@@ -275,28 +275,15 @@
   ],
   "milestones": [
     {
-      "id": "kickoff",
-      "at": 0,
-      "name": "Jam Session Kickoff",
-      "kind": "org",
-      "cycle": 0,
-      "owner": "Product",
-      "audience": "Full organization, especially the Build Org",
-      "inputs": ["Finalized opportunity pitches", "Product strategy and tactics"],
-      "outputs": ["Cycle formally begins", "Shared view of strategy and the selected work"],
-      "detail": "Opens the cycle. Happens at the same boundary as the prior cycle's Engineering Demo Day and cycle close."
-    },
-    {
       "id": "brp",
       "at": 1,
       "name": "Engineering Big Room Planning",
       "kind": "team",
       "cycle": 0,
-      "owner": "Engineering leaders",
       "audience": "Engineering leaders",
       "inputs": ["Each pod's early thinking after first sessions with the PM"],
-      "outputs": ["Risks, dependencies and opportunities surfaced", "Plans pressure-tested with peers"],
-      "detail": "A sounding board at the end of week 1. Requires that initial conversations with Product have already happened."
+      "detail": "A sounding board at the end of week 1. Requires that initial conversations with Product have already happened.",
+      "outcomes": ["Risks, dependencies and opportunities surfaced", "Plans pressure-tested with peers"]
     },
     {
       "id": "pitchback",
@@ -304,11 +291,10 @@
       "name": "Engineering Pitch-back",
       "kind": "team",
       "cycle": 0,
-      "owner": "The pod",
       "audience": "Pod, PM and Design (one per pod)",
-      "inputs": ["Draft implementation plan (Pod Delivery Plan)"],
-      "outputs": ["Implementation plan aligned with Product", "Ready for delivery"],
-      "detail": "The checkpoint that says planning is done. Every pod has one unless there is a reason it does not make sense."
+      "inputs": ["Draft Pod Delivery Plan"],
+      "detail": "The checkpoint that says planning is done. Every pod has one unless there is a reason it does not make sense.",
+      "outcomes": ["Pod Delivery Plan aligned with Product", "Ready for delivery"]
     },
     {
       "id": "delivery-kickoff",
@@ -316,11 +302,10 @@
       "name": "Delivery Kickoff",
       "kind": "build",
       "cycle": 0,
-      "owner": "Engineering teams and pods present",
       "audience": "Full Build Org plus key stakeholders; anyone welcome",
-      "inputs": ["Implementation plans aligned at Pitch-back"],
-      "outputs": ["Aligned Build Org and stakeholders", "Launch Brief and Walkthrough/FAQ drafts opened", "Ledger items created"],
-      "detail": "Celebrates the end of planning and tells everyone what we are going for. First point where the downstream documents exist."
+      "inputs": ["Pod Delivery Plans aligned at Pitch-back"],
+      "detail": "Celebrates the end of planning and tells everyone what we are going for. First point where the downstream documents exist.",
+      "outcomes": ["Aligned Build Org and stakeholders", "Launch Brief and Walkthrough/FAQ drafts opened", "Product Delivery Ledger becomes the live view of committed work"]
     },
     {
       "id": "shareouts",
@@ -328,11 +313,10 @@
       "name": "Design Share-outs",
       "kind": "team",
       "cycle": 0,
-      "owner": "Design",
       "audience": "Pod plus design leadership; sometimes business stakeholders",
       "inputs": ["Iterated designs"],
-      "outputs": ["Confirmation the design is on track with the Build Org"],
-      "detail": ""
+      "detail": "",
+      "outcomes": ["Confirmation the design is on track with the Build Org"]
     },
     {
       "id": "tiers",
@@ -340,11 +324,10 @@
       "name": "Confirm Launch Tiers",
       "kind": "gate",
       "cycle": 0,
-      "owner": "Product Marketing with Product",
       "audience": "PMM, Product, Program",
       "inputs": ["Proposed tiers", "Shape of the solution from planning"],
-      "outputs": ["Tier confirmed per project (target 100%)", "Launch language drafted"],
-      "detail": "We do not know exactly what is coming, but we know the shape of it and how big a deal to make of it."
+      "detail": "We do not know exactly what is coming, but we know the shape of it and how big a deal to make of it.",
+      "outcomes": ["Tier confirmed per project (target 100%)", "Launch language drafted"]
     },
     {
       "id": "design-demo",
@@ -352,11 +335,10 @@
       "name": "Design Demo Day",
       "kind": "org",
       "cycle": 0,
-      "owner": "Design leaders",
       "audience": "Full organization",
       "inputs": ["V1 concepts, research and findings"],
-      "outputs": ["Recording, added to the Launch Brief and Walkthrough/FAQ", "Business can see and touch the direction"],
-      "detail": "Midpoint of the cycle. First time the wider business sees the product taking shape."
+      "detail": "Midpoint of the cycle. First time the wider business sees the product taking shape.",
+      "outcomes": ["Recording, added to the Launch Brief and Walkthrough/FAQ", "Business sees the direction taking shape"]
     },
     {
       "id": "enable-early",
@@ -365,11 +347,10 @@
       "kind": "gtm",
       "cycle": 0,
       "status": "optional",
-      "owner": "Program with Product",
       "audience": "CS and Sales",
       "inputs": ["Current docs and demos"],
-      "outputs": ["Earlier readiness where the work allows it"],
-      "detail": "Some cycles run an extra session at the start of week 6 or week 4. Any time after Design Demo Day works."
+      "detail": "Some cycles run an extra session at the start of week 6 or week 4. Any time after Design Demo Day works.",
+      "outcomes": ["Earlier readiness where the work allows it"]
     },
     {
       "id": "portfolio",
@@ -377,11 +358,10 @@
       "name": "Portfolio Review",
       "kind": "leadership",
       "cycle": 1,
-      "owner": "Product",
       "audience": "Executive team, extended leadership and key stakeholders; all PMs present and presenting",
       "inputs": ["Finalized, ranked opportunity pitches"],
-      "outputs": ["Confirmed, ranked list of work for next cycle"],
-      "detail": "The business says yes or no, with conversation where needed. Everything downstream for next cycle keys off this."
+      "detail": "The business says yes or no, with conversation where needed. Everything downstream for next cycle keys off this.",
+      "outcomes": ["Confirmed, ranked list of work for next cycle"]
     },
     {
       "id": "select",
@@ -389,11 +369,10 @@
       "name": "Pods Select Pitches (forecast)",
       "kind": "gate",
       "cycle": 1,
-      "owner": "Engineering leaders",
       "audience": "Pod leads and Product",
       "inputs": ["Confirmed ranked list"],
-      "outputs": ["Forecast of what each pod will take on", "Start of opportunity intake"],
-      "detail": "A forecast, not a commitment. The whole team is not present and we are still building."
+      "detail": "A forecast, not a commitment. The whole team is not present and we are still building.",
+      "outcomes": ["Forecast of what each pod will take on", "Start of opportunity intake"]
     },
     {
       "id": "enable-1",
@@ -401,11 +380,10 @@
       "name": "Enablement Session 1",
       "kind": "gtm",
       "cycle": 0,
-      "owner": "Program with Product",
       "audience": "Full CS and Sales teams",
-      "inputs": ["Launch Brief and Walkthrough/FAQ drafts", "Demos of work in progress"],
-      "outputs": ["Recording added to docs", "Business about 80% enabled"],
-      "detail": "Start of week 7."
+      "inputs": ["Launch Brief and Walkthrough/FAQ drafts for the projects covered", "Demos of work in progress"],
+      "detail": "Start of week 7. Two independent sessions a week apart; each project is covered in one of them. Two dates give enough time for everything and space between. About 80%, not 100%, because the final version is not yet in production and the docs are still partial.",
+      "outcomes": ["Recording added to the docs", "CS and Sales about 80% enabled on the projects covered"]
     },
     {
       "id": "enable-2",
@@ -413,11 +391,10 @@
       "name": "Enablement Session 2",
       "kind": "gtm",
       "cycle": 0,
-      "owner": "Program with Product",
       "audience": "Full CS and Sales teams",
-      "inputs": ["Updated docs and demos"],
-      "outputs": ["Recording added to docs", "Business considered enabled"],
-      "detail": "Start of week 8. Not 100% because the final version is not in production and the docs are partial."
+      "inputs": ["Launch Brief and Walkthrough/FAQ drafts for the projects covered", "Demos of work in progress"],
+      "detail": "Start of week 8. Two independent sessions a week apart; each project is covered in one of them. Two dates give enough time for everything and space between. About 80%, not 100%, because the final version is not yet in production and the docs are still partial.",
+      "outcomes": ["Recording added to the docs", "CS and Sales about 80% enabled on the projects covered"]
     },
     {
       "id": "eng-demo",
@@ -425,11 +402,10 @@
       "name": "Engineering Demo Day",
       "kind": "org",
       "cycle": 0,
-      "owner": "Engineering leader; teams present",
       "audience": "Full organization",
       "inputs": ["What the pods delivered"],
-      "outputs": ["Recording", "Cycle closes; next cycle opens with Jam Session Kickoff"],
-      "detail": "Celebratory show and tell. Closes the org-wide alignment arc: Kickoff explained the strategy, Design Demo Day showed the shape, Engineering Demo Day shows what is real."
+      "detail": "Celebratory show and tell. Completes the org-wide arc: Design Demo Day showed the shape, Engineering Demo Day shows what is real.",
+      "outcomes": ["Recording", "Cycle closes; the next cycle begins"]
     }
   ],
   "artifacts": [
@@ -456,7 +432,7 @@
     },
     {
       "id": "plan",
-      "name": "Pod Delivery Plan (implementation plan)",
+      "name": "Pod Delivery Plan",
       "owner": "Pod, led by Engineering",
       "cycle": 0,
       "purpose": "The pod's way of confirming its plan: chosen approach, intended increment, scope, cut lines, risks.",
@@ -494,12 +470,12 @@
         },
         {
           "at": 6,
-          "label": "Enablement 1",
+          "label": "Enablement session",
           "readiness": "~80%"
         },
         {
           "at": 7,
-          "label": "Enablement 2",
+          "label": "Enablement session",
           "readiness": "~80%"
         }
       ],
@@ -523,17 +499,17 @@
         },
         {
           "at": 6,
-          "label": "Enablement 1",
+          "label": "Enablement session",
           "readiness": "~80%"
         },
         {
           "at": 7,
-          "label": "Enablement 2",
+          "label": "Enablement session",
           "readiness": "~80%"
         }
       ],
       "after": "100% by week 2 of next cycle"
     }
   ],
-  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression."]
+  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression.", "Draft 5: Jam Session Kickoff removed (not currently held). Milestone owners removed; outputs renamed outcomes. Enablement sessions described as independent, each covering a set of projects. Milestones and Documents tabs removed."]
 }

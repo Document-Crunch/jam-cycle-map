@@ -201,8 +201,6 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
     <button class="tab" role="tab" data-view="cycle" aria-selected="true">The cycle</button>
     <button class="tab" role="tab" data-view="week" aria-selected="false">This week</button>
     <button class="tab" role="tab" data-view="function" aria-selected="false">By function</button>
-    <button class="tab" role="tab" data-view="milestones" aria-selected="false">Milestones</button>
-    <button class="tab" role="tab" data-view="artifacts" aria-selected="false">Documents</button>
   </nav>
 </header>
 
@@ -241,13 +239,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
     <div class="map-wrap"><div class="map" id="fn-map"></div></div>
   </section>
 
-  <section class="view" id="view-milestones" hidden>
-    <div class="cards" id="ms-cards"></div>
-  </section>
 
-  <section class="view" id="view-artifacts" hidden>
-    <div class="cards" id="art-cards"></div>
-  </section>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -359,7 +351,7 @@ function msHTML(m){
   <h2>${esc(m.name)}</h2>
   <p class="meta mono" style="color:var(--muted);font-size:12px">${where}</p>
   ${m.detail?`<p>${esc(m.detail)}</p>`:''}
-  <dl class="kv"><dt>Owner</dt><dd>${esc(m.owner)}</dd><dt>Who attends</dt><dd>${esc(m.audience)}</dd><dt>Inputs</dt><dd>${list(m.inputs)}</dd><dt>Outputs</dt><dd>${list(m.outputs)}</dd></dl>`;
+  <dl class="kv"><dt>Who attends</dt><dd>${esc(m.audience)}</dd><dt>Inputs</dt><dd>${list(m.inputs)}</dd><dt>Outcomes</dt><dd>${list(m.outcomes)}</dd></dl>`;
 }
 function actHTML(a){
   const l = laneById[a.lane];
@@ -381,7 +373,7 @@ document.addEventListener('click', e=>{
 /* ---------- this week ---------- */
 let curWeek = 1, curFn = D.lanes[0].id;
 function blkBtn(a, i){ return `<button class="blk ${a.layer} ${cycClass(a.cycle)}" data-act="${i}">${a.cycle!==0?`<span class="cyc">${cycLabel(a.cycle)}</span>`:''}<span>${esc(a.title)}</span></button>`; }
-function msItem(m){ return `<button class="ms-item" data-ms="${m.id}"><i class="dot ${m.kind}" style="margin-top:4px;flex:none"></i><span><b>${esc(m.name)}</b>${m.cycle===1?' <span class="pill c1">+1</span>':''}<small>${esc(m.owner)} → ${esc(m.audience)}</small></span></button>`; }
+function msItem(m){ return `<button class="ms-item" data-ms="${m.id}"><i class="dot ${m.kind}" style="margin-top:4px;flex:none"></i><span><b>${esc(m.name)}</b>${m.cycle===1?' <span class="pill c1">+1</span>':''}<small>${esc(m.audience)}</small></span></button>`; }
 function buildWeek(){
   document.getElementById('week-pick').innerHTML = Array.from({length:W},(_,i)=>`<button aria-pressed="${i+1===curWeek}" data-week="${i+1}">Week ${i+1}</button>`).join('');
   const opens = visibleMs.filter(m=>m.at===curWeek-1), closes = visibleMs.filter(m=>m.at===curWeek);
@@ -406,23 +398,6 @@ function buildFn(){
 }
 document.getElementById('fn-pick').addEventListener('click', e=>{ const b=e.target.closest('[data-fn]'); if(b){ curFn=b.dataset.fn; buildFn(); } });
 
-/* ---------- milestones & artifacts ---------- */
-function msCard(m){
-  const where = m.at===null ? (m.status==='recurring'?'Recurring, about twice a cycle':'Not placed') : boundaryName(m.at);
-  return `<div class="card"><h3><i class="dot ${m.kind}"></i>${esc(m.name)}${m.status?`<span class="pill">${esc(m.status)}</span>`:''}${m.cycle===1?`<span class="pill c1">+1</span>`:''}</h3>
-  <div class="meta mono">${where} · ${KIND_LABEL[m.kind]||m.kind}</div>
-  ${m.detail?`<p>${esc(m.detail)}</p>`:''}
-  <dl class="kv"><dt>Owner</dt><dd>${esc(m.owner)}</dd><dt>Who attends</dt><dd>${esc(m.audience)}</dd><dt>Inputs</dt><dd>${list(m.inputs)}</dd><dt>Outputs</dt><dd>${list(m.outputs)}</dd></dl></div>`;
-}
-function buildMilestones(){
-  const sorted = [...visibleMs].sort((a,b)=>a.at-b.at);
-  document.getElementById('ms-cards').innerHTML = sorted.map(msCard).join('');
-}
-function buildArtifacts(){
-  document.getElementById('art-cards').innerHTML = D.artifacts.map(a=>`<div class="card"><h3>${esc(a.name)}${a.cycle===1?`<span class="pill c1">+1</span>`:''}</h3><div class="meta">${esc(a.owner)}</div><p>${esc(a.purpose)}</p>
-  <dl class="kv"><dt>Progression</dt><dd><ul>${a.checkpoints.map(c=>`<li>${boundaryName(c.at)}: ${esc(c.label)}${c.readiness?` <b>(${esc(c.readiness)})</b>`:''}</li>`).join('')}${a.after?`<li>${esc(a.after)}</li>`:''}</ul></dd></dl></div>`).join('');
-}
-
 /* ---------- tabs ---------- */
 document.getElementById('tabs').addEventListener('click', e=>{
   const t = e.target.closest('.tab'); if(!t) return;
@@ -433,6 +408,6 @@ document.getElementById('tabs').addEventListener('click', e=>{
 ['show-c0','show-c1','show-cm1'].forEach(id=>document.getElementById(id).addEventListener('change', applyFilters));
 document.querySelectorAll('.legend .k').forEach(k=>{ const kind=[...k.querySelector('.dot').classList].find(c=>c!=='dot'); if(!VIS.has(kind)) k.remove(); });
 
-buildMap(); buildWeek(); buildFn(); buildMilestones(); buildArtifacts();
+buildMap(); buildWeek(); buildFn();
 try{ const v = localStorage.getItem('jam-view'); const t = v && document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }catch(_){}
 </script>
