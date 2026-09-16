@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-16 draft 3",
+    "version": "2026-09-16 draft 4",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -46,8 +46,7 @@
       "id": "pmm",
       "name": "Product Marketing",
       "color": "pmm",
-      "summary": "Owns the Launch Brief and launch tiers. Least developed lane; expect this to change as enablement matures.",
-      "flag": "Nascent"
+      "summary": "Owns the Launch Brief and launch tiers. Turns delivery understanding into positioning, timing, packaging and launch communications."
     },
     {
       "id": "program",
@@ -191,7 +190,7 @@
       "layer": "secondary",
       "cycle": -1,
       "title": "Release notes and launch comms for shipped work",
-      "detail": "Placeholder. Work that landed on time rides this release; otherwise it rolls to the next. Post-cycle PMM work is not yet well defined."
+      "detail": "Work that landed on time rides this release: release notes and initial launch communications. Work that did not rolls to the next cycle's launch."
     },
     {
       "lane": "pmm",
@@ -199,7 +198,7 @@
       "layer": "primary",
       "cycle": 0,
       "title": "Confirm launch tier; open the Launch Brief",
-      "detail": "By the end of week 3 the shape of the solution is known well enough to confirm the tier. Target: 100% on the tier, launch language drafted. Percentages here are provisional."
+      "detail": "By the end of week 3 the shape of the solution is known well enough to confirm the tier and draft the launch language."
     },
     {
       "lane": "pmm",
@@ -473,23 +472,6 @@
       ]
     },
     {
-      "id": "ledger",
-      "name": "Product Delivery Ledger",
-      "owner": "Product, with Program support",
-      "cycle": 0,
-      "purpose": "Live operational state for committed work: delivery state, changes, risks, readiness, next checkpoint.",
-      "checkpoints": [
-        {
-          "at": 2,
-          "label": "Items created at Delivery Kickoff"
-        },
-        {
-          "at": 8,
-          "label": "Release and readiness understood"
-        }
-      ]
-    },
-    {
       "id": "launch-brief",
       "name": "Launch Brief",
       "owner": "Product Marketing, with Product",
@@ -553,5 +535,5 @@
       "after": "100% by week 2 of next cycle"
     }
   ],
-  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session."]
+  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression."]
 }

@@ -90,7 +90,8 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .lane-label b{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
 .lane-label b::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--lc)}
 .lane-label .flag{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.lane-label .sum{font-size:11.5px;color:var(--muted);line-height:1.35}
+.lane-label .sum{font-size:11.5px;color:var(--muted);line-height:1.35;visibility:hidden}
+.lane:hover .lane-label .sum,.lane:focus-within .lane-label .sum{visibility:visible}
 .blk{margin:6px 4px;padding:8px 24px 8px 10px;border-radius:6px;font-size:12.5px;line-height:1.3;text-align:left;position:relative;z-index:1;min-height:36px;display:flex;align-items:flex-start;gap:6px;border:1px solid transparent;transition:box-shadow .12s,transform .12s}
 .blk::after{content:"›";position:absolute;right:8px;top:6px;font-size:16px;line-height:1;opacity:.55;font-weight:400}
 .blk:hover::after,.blk:focus-visible::after{opacity:1}
@@ -207,7 +208,6 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 
 <main>
   <section class="view" id="view-cycle">
-    <p class="intro">Eight weeks, repeated back to back. Every lane carries two bands: the top is the primary focus, the bottom is what runs alongside it. Solid blocks are this cycle's work; hatched blocks prepare the next cycle; dashed blocks close out the last one. Anything marked with › opens a detail panel.</p>
     <div class="controls">
       <label class="toggle"><input type="checkbox" id="show-c0" checked> <span class="swatch" style="background:var(--product)"></span> This cycle</label>
       <label class="toggle"><input type="checkbox" id="show-c1" checked> <span class="swatch c1"></span> Next-cycle prep (+1)</label>
@@ -225,7 +225,6 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 
     <div class="arts">
       <h2>Documents across the cycle</h2>
-      <p class="intro">Each document has one job and progresses at the milestones. The Launch Brief and Walkthrough &amp; FAQ are the enablement thread: opened at Delivery Kickoff, fed by every demo, about 80% at the enablement sessions, 100% two weeks into the next cycle.</p>
       <div class="map-wrap"><div class="map" id="artmap"></div></div>
     </div>
 
@@ -233,24 +232,20 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
   </section>
 
   <section class="view" id="view-week" hidden>
-    <p class="intro">Pick a week to see what each function is focused on, and which milestones open and close it.</p>
     <div class="pick" id="week-pick"></div>
     <div id="week-body"></div>
   </section>
 
   <section class="view" id="view-function" hidden>
-    <p class="intro">One function's cycle on the same grid as the full map, with the cross-functional moments above it.</p>
     <div class="pick" id="fn-pick"></div>
     <div class="map-wrap"><div class="map" id="fn-map"></div></div>
   </section>
 
   <section class="view" id="view-milestones" hidden>
-    <p class="intro">Every ceremony, decision and session in the cycle: who runs it, who comes, what goes in, what comes out.</p>
     <div class="cards" id="ms-cards"></div>
   </section>
 
   <section class="view" id="view-artifacts" hidden>
-    <p class="intro">The documents the framework produces, who owns each, and when it moves.</p>
     <div class="cards" id="art-cards"></div>
   </section>
 </main>
@@ -327,7 +322,7 @@ function buildMap(){
   D.artifacts.forEach((a,i)=>{
     const cps = a.checkpoints;
     const from = Math.min(...cps.map(c=>c.at)), to = Math.max(...cps.map(c=>c.at));
-    g += `<div class="art-row"><button class="art-label" data-art="${i}"><b>${esc(a.name)}</b><span>${esc(a.owner)}${a.cycle===1?' · +1':''}</span>${a.after?`<span class="art-after">→ ${esc(a.after)}</span>`:''}</button><div class="art-track">`;
+    g += `<div class="art-row"><button class="art-label" data-art="${i}"><b>${esc(a.name)}</b><span>${esc(a.owner)}</span>${a.after?`<span class="art-after">→ ${esc(a.after)}</span>`:''}</button><div class="art-track">`;
     g += `<div class="art-bar ${a.cycle===1?'c1':''}" style="left:${pct(from)};width:calc(${pct(to)} - ${pct(from)})"></div>`;
     cps.forEach(c=>{
       g += `<div class="cp ${c.readiness?'has-r':''}" style="left:${pct(c.at)}">${c.readiness?`<b>${esc(c.readiness)}</b>`:''}<i></i><small>${esc(c.label)}</small></div>`;
