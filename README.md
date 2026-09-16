@@ -17,3 +17,7 @@ Live page: https://document-crunch.github.io/jam-cycle-map/
 3. Commit and push `jam-framework.json` and `index.html`. Pages updates within a minute or two.
 
 Owner: Program Management. Source docs live in Notion under Program Management Home / Jam! Delivery Framework.
+
+## Promoting in-page edits to the company page
+
+Ryan edits inside the Claude artifact (Edit toggle). To publish those edits here: save the artifact HTML, run `python3 promote.py that.html`, then `./build.sh`, commit and push.
