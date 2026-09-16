@@ -68,10 +68,12 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .ms-track{position:absolute;left:190px;right:0;top:0;bottom:0}
 .ms-track::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid var(--line)}
 .ms{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:132px;text-align:center;font-size:11.5px;line-height:1.25;padding:4px 2px;border-radius:6px}
-.ms:hover{background:var(--hover)}
+.ms{transition:transform .12s}
 .ms .dot{width:12px;height:12px}
-.ms .lbl{color:var(--ink);font-weight:500}
-.ms.optional .lbl{color:var(--muted);font-weight:400}
+.ms .lbl{color:var(--ink);font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;display:inline-block}
+.ms .lbl::after{content:" ›";opacity:.55}
+.ms:hover .lbl,.ms:focus-visible .lbl{border-color:var(--line-strong);box-shadow:0 3px 10px rgba(27,36,48,.14)}
+.ms.optional .lbl{color:var(--muted);font-weight:400;border-style:dashed}
 .ms.stack-1{top:54px}
 .ms.stack-1 .dot{display:none}
 .ms.stack-2{top:100px}
@@ -84,19 +86,21 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .line.phase-line{border-left:1px solid var(--line-strong)}
 .lane{display:grid;grid-template-columns:190px repeat(8,1fr);grid-auto-rows:minmax(48px,auto);border-top:1px solid var(--line);position:relative}
 .lane + .lane{border-top:1px solid var(--line-strong)}
-.lane-label{grid-row:1 / span 2;grid-column:1;padding:12px 12px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;position:sticky;left:0;background:var(--surface);z-index:2}
+.lane-label{grid-row:1 / span 2;grid-column:1;padding:12px 12px 14px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;position:sticky;left:0;background:var(--surface);z-index:2}
 .lane-label b{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
 .lane-label b::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--lc)}
 .lane-label .flag{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.lane-label .sum{font-size:12px;color:var(--muted);display:none}
-.lane:hover .lane-label .sum{display:block}
-.blk{margin:6px 4px;padding:8px 10px;border-radius:6px;font-size:12.5px;line-height:1.3;text-align:left;position:relative;z-index:1;min-height:36px;display:flex;align-items:flex-start;gap:6px;border:1px solid transparent}
+.lane-label .sum{font-size:11.5px;color:var(--muted);line-height:1.35}
+.blk{margin:6px 4px;padding:8px 24px 8px 10px;border-radius:6px;font-size:12.5px;line-height:1.3;text-align:left;position:relative;z-index:1;min-height:36px;display:flex;align-items:flex-start;gap:6px;border:1px solid transparent;transition:box-shadow .12s,transform .12s}
+.blk::after{content:"›";position:absolute;right:8px;top:6px;font-size:16px;line-height:1;opacity:.55;font-weight:400}
+.blk:hover::after,.blk:focus-visible::after{opacity:1}
 .blk.primary{background:var(--lc);color:#fff;font-weight:500}
 .blk.secondary{background:var(--lsoft);color:var(--ink)}
 .blk.c1{background:repeating-linear-gradient(135deg,var(--lsoft) 0 3px,var(--surface) 3px 7px);border-color:var(--lc);color:var(--ink);font-weight:500}
 .blk.c1.secondary{font-weight:400;opacity:.9}
 .blk.cm1{background:var(--surface);border:1.5px dashed var(--lc);color:var(--ink)}
-.blk:hover{filter:brightness(.97);box-shadow:0 0 0 2px var(--lc) inset}
+.blk:hover{box-shadow:0 0 0 2px var(--lc) inset,0 4px 12px rgba(27,36,48,.18);transform:translateY(-1px)}
+.blk.secondary:hover,.blk.c1:hover,.blk.cm1:hover{box-shadow:0 0 0 1.5px var(--lc) inset,0 4px 12px rgba(27,36,48,.14)}
 .blk .cyc{font-size:10px;padding:1px 5px;border-radius:3px;background:rgba(0,0,0,.08);white-space:nowrap;flex:none;margin-top:1px}
 .blk.primary.c0 .cyc{display:none}
 .blk.c1 .cyc,.blk.cm1 .cyc{background:var(--lc);color:#fff}
@@ -108,7 +112,10 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .arts .intro{margin-bottom:10px}
 .art-grid{display:grid;grid-template-columns:190px repeat(8,1fr);border-top:1px solid var(--line);position:relative}
 .art-row{display:contents}
-.art-row .art-label{grid-column:1;padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12.5px;position:sticky;left:0;background:var(--surface);z-index:2}
+.art-row .art-label{grid-column:1;padding:12px 26px 12px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12.5px;position:sticky;left:0;background:var(--surface);z-index:2;text-align:left;position:sticky;transition:background .12s}
+.art-row .art-label::after{content:"›";position:absolute;right:10px;top:10px;font-size:16px;opacity:.55}
+.art-row .art-label:hover{background:var(--hover)}
+.art-row .art-label:hover::after{opacity:1}
 .art-row .art-label b{display:block;font-weight:600}
 .art-row .art-label span{color:var(--muted);font-size:11.5px}
 .art-track{grid-column:2 / -1;position:relative;height:72px;border-bottom:1px solid var(--line)}
@@ -148,7 +155,9 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .bounds{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .bound{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .bound h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px;font-weight:600}
-.bound .ms-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line);text-align:left;width:100%}
+.bound .ms-item{display:flex;gap:8px;align-items:flex-start;padding:8px 26px 8px 6px;border-top:1px solid var(--line);text-align:left;width:100%;position:relative;border-radius:6px}
+.bound .ms-item::after{content:"›";position:absolute;right:10px;top:8px;font-size:16px;opacity:.55}
+.bound .ms-item:hover{background:var(--hover)}
 .bound .ms-item:first-of-type{border-top:0}
 .bound .ms-item b{font-weight:500}
 .bound .ms-item small{color:var(--muted);display:block}
@@ -166,7 +175,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 /* drawer */
 .drawer{position:fixed;top:env(safe-area-inset-top,0px);right:0;bottom:0;width:min(420px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:var(--shadow);z-index:20;padding:18px 20px calc(20px + env(safe-area-inset-bottom,0px));overflow:auto;transform:translateX(100%);transition:transform .2s ease}
 .drawer.open{transform:none}
-@media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+@media (prefers-reduced-motion:reduce){.drawer,.blk,.ms,.art-label{transition:none}.blk:hover{transform:none}}
 .drawer .close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:6px;font-size:18px;color:var(--muted)}
 .drawer .close:hover{background:var(--hover)}
 .drawer .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:6px}
@@ -198,7 +207,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 
 <main>
   <section class="view" id="view-cycle">
-    <p class="intro">Eight weeks, repeated back to back. Every lane carries two bands: the top is the primary focus, the bottom is what runs alongside it. Solid blocks are this cycle's work; hatched blocks prepare the next cycle; dashed blocks close out the last one. Click anything for detail.</p>
+    <p class="intro">Eight weeks, repeated back to back. Every lane carries two bands: the top is the primary focus, the bottom is what runs alongside it. Solid blocks are this cycle's work; hatched blocks prepare the next cycle; dashed blocks close out the last one. Anything marked with › opens a detail panel.</p>
     <div class="controls">
       <label class="toggle"><input type="checkbox" id="show-c0" checked> <span class="swatch" style="background:var(--product)"></span> This cycle</label>
       <label class="toggle"><input type="checkbox" id="show-c1" checked> <span class="swatch c1"></span> Next-cycle prep (+1)</label>
@@ -232,7 +241,6 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
   <section class="view" id="view-function" hidden>
     <p class="intro">One function's cycle on the same grid as the full map, with the cross-functional moments above it.</p>
     <div class="pick" id="fn-pick"></div>
-    <div id="fn-summary"></div>
     <div class="map-wrap"><div class="map" id="fn-map"></div></div>
   </section>
 
@@ -329,7 +337,8 @@ function buildMap(){
   g += '</div>';
   am.innerHTML = g;
 
-  document.getElementById('notes').innerHTML = `<h2>Notes and recent changes</h2><ul>${D.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`;
+  const notesEl = document.getElementById('notes');
+  if(D.meta.showNotes && D.notes && D.notes.length){ notesEl.innerHTML = `<h2>Notes and recent changes</h2><ul>${D.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`; } else { notesEl.hidden = true; }
 }
 
 function applyFilters(){
@@ -398,7 +407,6 @@ document.getElementById('week-pick').addEventListener('click', e=>{ const b=e.ta
 function buildFn(){
   document.getElementById('fn-pick').innerHTML = D.lanes.map(l=>`<button aria-pressed="${l.id===curFn}" data-fn="${l.id}">${esc(l.name)}</button>`).join('');
   const l = laneById[curFn];
-  document.getElementById('fn-summary').innerHTML = `<div class="fn-summary" style="--lc:var(--${l.color})"><p>${esc(l.summary)}</p></div>`;
   document.getElementById('fn-map').innerHTML = laneMapHTML([l]);
 }
 document.getElementById('fn-pick').addEventListener('click', e=>{ const b=e.target.closest('[data-fn]'); if(b){ curFn=b.dataset.fn; buildFn(); } });

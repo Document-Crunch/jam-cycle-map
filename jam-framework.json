@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-16 draft 2",
+    "version": "2026-09-16 draft 3",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -19,7 +19,9 @@
       "cycleMinus1": "Close out prior cycle (-1)"
     },
     "visibleKinds": ["org", "build", "leadership", "gtm"],
-    "kindNote": "Only cross-functional moments are drawn. Team and pod sessions (Big Room Planning, Pitch-back, Design Share-outs, launch tier confirmation) stay in the data but are hidden."
+    "kindNote": "Only cross-functional moments are drawn. Team and pod sessions (Big Room Planning, Pitch-back, Design Share-outs, launch tier confirmation) stay in the data but are hidden.",
+    "showNotes": false,
+    "notesAbout": "Maintainer notes. Rendered only when meta.showNotes is true."
   },
   "lanes": [
     {
