@@ -18,11 +18,22 @@ Live page: https://document-crunch.github.io/jam-cycle-map/
 
 ## Making a change
 
+Run `./ship.sh "commit message"` after editing `jam-framework.json`. It builds, runs the
+checks, commits, pushes, and then polls the live page until it actually serves the version
+in the JSON. It exits non-zero if the page never catches up, so a green run means the
+company page is current. Nothing is "done" before that.
+
+The steps it wraps, if you need them individually:
+
 1. Edit `jam-framework.json`.
 2. Run `./build.sh` (needs python3).
 3. Run `node verify.js`. It checks the data invariants and that `index.html` matches its
    sources. Non-zero exit means do not push.
 4. Commit and push `jam-framework.json` and `index.html`. Pages updates within a minute or two.
+
+GitHub Pages serves the HTML with `cache-control: max-age=600`, so your own browser can
+show a stale copy for up to ten minutes after a good deploy. Hard-reload before concluding
+the page did not update.
 
 Owner: Program Management. Source docs live in Notion under Program Management Home / Jam! Delivery Framework.
 
