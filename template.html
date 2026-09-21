@@ -64,20 +64,15 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .week-row .wk.w3{border-left:1px solid var(--line-strong)}
 .week-row .corner{border-bottom:1px solid var(--line)}
 .ms-row{position:relative;height:72px;grid-column:1 / -1}
-.ms-row.tall{height:112px}
 .ms-track{position:absolute;left:190px;right:0;top:0;bottom:0}
 .ms-track::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid var(--line)}
-.ms{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:132px;text-align:center;font-size:11.5px;line-height:1.25;padding:4px 2px;border-radius:6px}
-.ms{transition:transform .12s}
-.ms .dot{width:12px;height:12px}
+.ms-group{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:136px}
+.ms-group .dot{width:12px;height:12px;flex:none}
+.ms{display:block;width:100%;text-align:center;font-size:11.5px;line-height:1.25;padding:0 2px;transition:transform .12s}
 .ms .lbl{color:var(--ink);font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;display:inline-block}
 .ms .lbl::after{content:" ›";opacity:.55}
 .ms:hover .lbl,.ms:focus-visible .lbl{border-color:var(--line-strong);box-shadow:0 3px 10px rgba(27,36,48,.14)}
 .ms.optional .lbl{color:var(--muted);font-weight:400;border-style:dashed}
-.ms.stack-1{top:54px}
-.ms.stack-1 .dot{display:none}
-.ms.stack-2{top:100px}
-.ms.stack-2 .dot{display:none}
 .ms .lbl .cyc{color:var(--muted);font-weight:400}
 .body{position:relative}
 .lines{position:absolute;left:190px;right:0;top:0;bottom:0;pointer-events:none}
@@ -303,12 +298,13 @@ function laneMapHTML(lanes){
   h += '</div>';
   const byAt = {};
   visibleMs.forEach(m=>{ (byAt[m.at]=byAt[m.at]||[]).push(m); });
-  const maxStack = Math.max(1, ...Object.values(byAt).map(l=>l.length));
-  h += `<div class="grid"><div class="ms-row ${maxStack>1?'tall':''}"><div class="ms-track">`;
+  h += `<div class="grid"><div class="ms-row"><div class="ms-track">`;
   Object.entries(byAt).forEach(([at,list])=>{
-    list.forEach((m,i)=>{
-      h += `<button class="ms stack-${i} ${m.status==='optional'?'optional':''}" style="left:${pct(+at)}" data-ms="${m.id}" title="${esc(m.name)}"><i class="dot ${m.kind}"></i><span class="lbl">${esc(m.name)}${m.cycle===1?' <span class="cyc">(+1)</span>':''}</span></button>`;
+    h += `<div class="ms-group" style="left:${pct(+at)}"><i class="dot ${list[0].kind}"></i>`;
+    list.forEach(m=>{
+      h += `<button class="ms ${m.status==='optional'?'optional':''}" data-ms="${m.id}" title="${esc(m.name)}"><span class="lbl">${esc(m.name)}${m.cycle===1?' <span class="cyc">(+1)</span>':''}</span></button>`;
     });
+    h += '</div>';
   });
   h += '</div></div></div>';
   h += '<div class="body"><div class="lines">';
@@ -330,6 +326,13 @@ function laneMapHTML(lanes){
   return h;
 }
 
+function sizeMsRows(){
+  document.querySelectorAll('.ms-row').forEach(row=>{
+    const groups=[...row.querySelectorAll('.ms-group')];
+    const h=Math.max(72, ...groups.map(g=>g.offsetHeight+22));
+    row.style.height=h+'px';
+  });
+}
 function buildMap(){
   document.getElementById('map').innerHTML = laneMapHTML(D.lanes);
 
@@ -432,6 +435,7 @@ function buildFn(){
   document.getElementById('fn-pick').innerHTML = D.lanes.map(l=>`<button aria-pressed="${l.id===curFn}" data-fn="${l.id}">${esc(l.name)}</button>`).join('');
   const l = laneById[curFn];
   document.getElementById('fn-map').innerHTML = laneMapHTML([l]);
+  sizeMsRows();
 }
 document.getElementById('fn-pick').addEventListener('click', e=>{ const b=e.target.closest('[data-fn]'); if(b){ curFn=b.dataset.fn; buildFn(); } });
 
@@ -561,10 +565,13 @@ document.getElementById('tabs').addEventListener('click', e=>{
   document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected', x===t));
   document.querySelectorAll('.view').forEach(v=>v.hidden = v.id !== 'view-'+t.dataset.view);
   try{ localStorage.setItem('jam-view', t.dataset.view); }catch(_){}
+  sizeMsRows();
 });
 ['show-c0','show-c1','show-cm1'].forEach(id=>document.getElementById(id).addEventListener('change', applyFilters));
 document.querySelectorAll('.legend .k').forEach(k=>{ const kind=[...k.querySelector('.dot').classList].find(c=>c!=='dot'); if(!VIS.has(kind)) k.remove(); });
 
-buildMap(); buildWeek(); buildFn();
+buildMap(); buildWeek(); buildFn(); sizeMsRows();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(sizeMsRows);
+window.addEventListener('resize', sizeMsRows);
 try{ const v = localStorage.getItem('jam-view'); const t = v && document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }catch(_){}
 </script>
