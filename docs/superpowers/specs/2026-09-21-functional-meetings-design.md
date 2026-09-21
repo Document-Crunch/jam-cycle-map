@@ -107,7 +107,8 @@ need no change.
 
 ## Sessions
 
-Nine new sessions, two changed, one split.
+Twelve chips in total: eight new sessions, two existing ones changed, and one
+existing share-out split into two.
 
 | Session | Group | When | Repeats |
 |---|---|---|---|
@@ -131,7 +132,8 @@ Changes to existing milestones:
 - `pitchback` — moves from the hidden `team` group to `engineering`, and gains
   `repeats: "per pod"`.
 - `shareouts` — splits into the two design share-outs. The design team share-out
-  comes first, then the share-out with the pod and its stakeholders.
+  comes first, then the share-out with the pod and its stakeholders. The two
+  Delivery Checks share a display name and need distinct ids.
 
 Each new milestone gets `audience` prose, `inputs` and `outcomes` for the detail
 panel, drawn from what Ryan described and from the Jam Ceremonies page in Notion
