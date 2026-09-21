@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-21 draft 8",
+    "version": "2026-09-21 draft 9",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -18,8 +18,51 @@
       "cycle1": "Prep for next cycle (+1)",
       "cycleMinus1": "Close out prior cycle (-1)"
     },
-    "visibleKinds": ["org", "build", "leadership", "gtm"],
-    "kindNote": "Only cross-functional moments are drawn. Team and pod sessions (Big Room Planning, Pitch-back, Design Share-outs, launch tier confirmation) stay in the data but are hidden.",
+    "groups": [
+      {
+        "id": "org",
+        "name": "Whole company",
+        "short": "WHOLE CO",
+        "default": true
+      },
+      {
+        "id": "build",
+        "name": "Build Org",
+        "short": "BUILD ORG",
+        "default": true
+      },
+      {
+        "id": "leadership",
+        "name": "Leadership",
+        "short": "LEADERSHIP",
+        "default": true
+      },
+      {
+        "id": "gtm",
+        "name": "CS & Sales",
+        "short": "CS & SALES",
+        "default": true
+      },
+      {
+        "id": "product",
+        "name": "Product",
+        "short": "PRODUCT",
+        "default": true
+      },
+      {
+        "id": "design",
+        "name": "Design",
+        "short": "DESIGN",
+        "default": true
+      },
+      {
+        "id": "engineering",
+        "name": "Engineering",
+        "short": "ENG",
+        "default": true
+      }
+    ],
+    "kindNote": "meta.groups defines the audience groups a reader can toggle. A milestone whose kind is not a listed group (team, gate) stays in the data and is never drawn.",
     "showNotes": false,
     "notesAbout": "Maintainer notes. Rendered only when meta.showNotes is true."
   },
@@ -275,25 +318,50 @@
   ],
   "milestones": [
     {
-      "id": "brp",
-      "at": 1,
-      "name": "Engineering Big Room Planning",
-      "kind": "team",
+      "id": "refine-1",
+      "at": 0.5,
+      "name": "Refinement 1",
+      "kind": "product",
       "cycle": 0,
-      "audience": "Engineering leaders",
+      "repeats": "per opportunity",
+      "audience": "The PM and the pod that picked up the opportunity",
+      "inputs": ["The selected opportunity pitch"],
+      "detail": "First working session between the PM and the pod, in the middle of week 1. One per opportunity, so several run in parallel across the pods.",
+      "outcomes": ["Shared read on the problem space", "First cut at an implementation approach"]
+    },
+    {
+      "id": "eng-leader-planning",
+      "at": 1,
+      "name": "Engineering Leader Planning",
+      "kind": "engineering",
+      "cycle": 0,
+      "audience": "All engineering leaders",
       "inputs": ["Each pod's early thinking after first sessions with the PM"],
-      "detail": "A sounding board at the end of week 1. Requires that initial conversations with Product have already happened.",
+      "detail": "A sounding board at the end of week 1, across all the pods. Requires that initial conversations with Product have already happened.",
       "outcomes": ["Risks, dependencies and opportunities surfaced", "Plans pressure-tested with peers"]
+    },
+    {
+      "id": "refine-2",
+      "at": 1.5,
+      "name": "Refinement 2",
+      "kind": "product",
+      "cycle": 0,
+      "repeats": "per opportunity",
+      "audience": "The PM and the pod that picked up the opportunity",
+      "inputs": ["The thinking from Refinement 1 and Engineering Leader Planning"],
+      "detail": "Second working session between the PM and the pod, in the middle of week 2, ahead of the pitch-back.",
+      "outcomes": ["Implementation approach settled enough to pitch back", "Scope and cut lines understood"]
     },
     {
       "id": "pitchback",
       "at": 2,
       "name": "Engineering Pitch-back",
-      "kind": "team",
+      "kind": "engineering",
       "cycle": 0,
-      "audience": "Pod, PM and Design (one per pod)",
+      "repeats": "per pod",
+      "audience": "The pod, Engineering, Product and Design",
       "inputs": ["Draft Pod Delivery Plan"],
-      "detail": "The checkpoint that says planning is done. Every pod has one unless there is a reason it does not make sense.",
+      "detail": "The pod presents its implementation plan back to Product. The checkpoint that says planning is done. Every pod has one unless there is a reason it does not make sense.",
       "outcomes": ["Pod Delivery Plan aligned with Product", "Ready for delivery"]
     },
     {
@@ -308,15 +376,27 @@
       "outcomes": ["Aligned Build Org and stakeholders", "Launch Brief and Walkthrough/FAQ drafts opened", "Product Delivery Ledger becomes the live view of committed work"]
     },
     {
-      "id": "shareouts",
-      "at": 3,
-      "name": "Design Share-outs",
-      "kind": "team",
+      "id": "design-shareout-team",
+      "at": 2.5,
+      "name": "Design Share-out (design team)",
+      "kind": "design",
       "cycle": 0,
-      "audience": "Pod plus design leadership; sometimes business stakeholders",
+      "audience": "The design team",
       "inputs": ["Iterated designs"],
-      "detail": "",
-      "outcomes": ["Confirmation the design is on track with the Build Org"]
+      "detail": "Designers share the work with each other first, inside the design team.",
+      "outcomes": ["Design direction reviewed by peers"]
+    },
+    {
+      "id": "design-shareout-pod",
+      "at": 3,
+      "name": "Design Share-out (pod & stakeholders)",
+      "kind": "design",
+      "cycle": 0,
+      "repeats": "per opportunity",
+      "audience": "The designer, the pod working the project, and any stakeholders who need to be there",
+      "inputs": ["Iterated designs, reviewed inside the design team"],
+      "detail": "The second share-out, with the pod delivering the project and the stakeholders attached to it. One per project, so several run across the pods.",
+      "outcomes": ["Confirmation the design is on track with the pod and its stakeholders"]
     },
     {
       "id": "tiers",
@@ -341,6 +421,30 @@
       "outcomes": ["Recording, added to the Launch Brief and Walkthrough/FAQ", "Business sees the direction taking shape"]
     },
     {
+      "id": "opp-proposals",
+      "at": 4,
+      "name": "Opportunity Proposals",
+      "kind": "product",
+      "cycle": 1,
+      "repeats": "weekly, weeks 3-4",
+      "audience": "The product team",
+      "inputs": ["Customer, stakeholder and data signals"],
+      "detail": "The product team works through candidate opportunities together across weeks 3 and 4.",
+      "outcomes": ["A set of candidate opportunities worth taking further"]
+    },
+    {
+      "id": "pitch-discovery",
+      "at": 4.5,
+      "name": "Pitch Discovery",
+      "kind": "product",
+      "cycle": 1,
+      "repeats": "per opportunity",
+      "audience": "Product and the internal stakeholders relevant to the opportunity",
+      "inputs": ["Draft opportunity pitch"],
+      "detail": "Brings internal stakeholders in early so a pitch is informed by the people who hold relevant context. One per opportunity.",
+      "outcomes": ["A stronger pitch candidate, informed by internal stakeholders"]
+    },
+    {
       "id": "enable-early",
       "at": 5,
       "name": "Enablement Session (optional, early)",
@@ -351,6 +455,29 @@
       "inputs": ["Current docs and demos"],
       "detail": "Some cycles run an extra session at the start of week 6 or week 4. Any time after Design Demo Day works.",
       "outcomes": ["Earlier readiness where the work allows it"]
+    },
+    {
+      "id": "portfolio-dry-run",
+      "at": 5,
+      "name": "Portfolio Review Dry Run",
+      "kind": "product",
+      "cycle": 1,
+      "audience": "The product team",
+      "inputs": ["Draft pitches and a working rank order"],
+      "detail": "The product team gets together the week before Portfolio Review and hashes out the plan it will bring.",
+      "outcomes": ["Pitches finalized", "Rank order agreed before the review"]
+    },
+    {
+      "id": "delivery-check-1",
+      "at": 5,
+      "name": "Delivery Check",
+      "kind": "engineering",
+      "cycle": 0,
+      "repeats": "per pod",
+      "audience": "The pod, the PM or PMs, and program management",
+      "inputs": ["Where delivery actually stands"],
+      "detail": "A week before Enablement Session 1. A read on how the pod's projects are shaking out, which enablement session each one slots into, and the current thinking on release, scope and launch. Big questions stay open; the point is to understand them as early as we can.",
+      "outcomes": ["Read on delivery confidence", "Enablement session slotting", "Open questions named early"]
     },
     {
       "id": "portfolio",
@@ -386,6 +513,18 @@
       "outcomes": ["Recording added to the docs", "CS and Sales about 80% enabled on the projects covered"]
     },
     {
+      "id": "delivery-check-2",
+      "at": 6,
+      "name": "Delivery Check",
+      "kind": "engineering",
+      "cycle": 0,
+      "repeats": "per pod",
+      "audience": "The pod, the PM or PMs, and program management",
+      "inputs": ["Where delivery actually stands"],
+      "detail": "A week before Enablement Session 2. A read on how the pod's projects are shaking out, which enablement session each one slots into, and the current thinking on release, scope and launch.",
+      "outcomes": ["Read on delivery confidence", "Enablement session slotting", "Open questions named early"]
+    },
+    {
       "id": "enable-2",
       "at": 7,
       "name": "Enablement Session 2",
@@ -395,6 +534,18 @@
       "inputs": ["Launch Brief and Walkthrough/FAQ drafts for the projects covered", "Demos of work in progress"],
       "detail": "Start of week 8. Two independent sessions a week apart; each project is covered in one of them. Two dates give enough time for everything and space between. About 80%, not 100%, because the final version is not yet in production and the docs are still partial.",
       "outcomes": ["Recording added to the docs", "CS and Sales about 80% enabled on the projects covered"]
+    },
+    {
+      "id": "opp-intake",
+      "at": 7,
+      "name": "Opportunity Intake",
+      "kind": "product",
+      "cycle": 1,
+      "repeats": "per opportunity",
+      "audience": "The product, engineering and design leaders for the pod",
+      "inputs": ["The opportunities the pod forecast it will pick up"],
+      "detail": "Product, engineering and design leaders take a first pass at the items the pods expect to pick up for the next cycle: high-level understanding and sense-checking of the opportunity, in the last two weeks.",
+      "outcomes": ["High-level shared understanding of each forecast opportunity", "Anything that would stop this becoming the official plan surfaced"]
     },
     {
       "id": "eng-demo",
@@ -511,5 +662,5 @@
       "after": "100% by week 2 of next cycle"
     }
   ],
-  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression.", "Draft 5: Jam Session Kickoff removed (not currently held). Milestone owners removed; outputs renamed outcomes. Enablement sessions described as independent, each covering a set of projects. Milestones and Documents tabs removed."]
+  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression.", "Draft 5: Jam Session Kickoff removed (not currently held). Milestone owners removed; outputs renamed outcomes. Enablement sessions described as independent, each covering a set of projects. Milestones and Documents tabs removed.", "Draft 9: Product, Design and Engineering meetings added as toggleable audience groups. Every chip states its own audience, so stacked chips read correctly. Milestones can sit mid-week.", "Draft 9: the design share-out timings (mid-week 3, end-week 3) and Opportunity Proposals (end-week 4, weekly across weeks 3-4) are inferred. The sequence is documented; the dates are not."]
 }

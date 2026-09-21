@@ -7,7 +7,7 @@
   --hover:#EEF1F6; --chip:#E9EDF3;
   --product:#2F6FDB; --engineering:#2E9E5B; --design:#D9961F; --pmm:#CF3F97; --program:#6B5BD2;
   --product-soft:#E3ECFB; --engineering-soft:#E1F3E8; --design-soft:#FBEFD6; --pmm-soft:#F9E1F0; --program-soft:#E9E6F9;
-  --org:#1B2430; --shadow:0 12px 32px rgba(27,36,48,.12);
+  --org:#1B2430; --build:#0E7C86; --shadow:0 12px 32px rgba(27,36,48,.12);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -15,7 +15,7 @@
     --hover:#222936; --chip:#262D38;
     --product:#6D9BF0; --engineering:#5CC487; --design:#E7B24C; --pmm:#E56FB8; --program:#9B8DF0;
     --product-soft:#1F2C44; --engineering-soft:#1B3328; --design-soft:#3A2F17; --pmm-soft:#3B1F31; --program-soft:#28244A;
-    --org:#E8ECF2; --shadow:0 12px 32px rgba(0,0,0,.5);
+    --org:#E8ECF2; --build:#3FB8C4; --shadow:0 12px 32px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
@@ -23,7 +23,7 @@
   --hover:#222936; --chip:#262D38;
   --product:#6D9BF0; --engineering:#5CC487; --design:#E7B24C; --pmm:#E56FB8; --program:#9B8DF0;
   --product-soft:#1F2C44; --engineering-soft:#1B3328; --design-soft:#3A2F17; --pmm-soft:#3B1F31; --program-soft:#28244A;
-  --org:#E8ECF2; --shadow:0 12px 32px rgba(0,0,0,.5);
+  --org:#E8ECF2; --build:#3FB8C4; --shadow:0 12px 32px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.45;margin:0}
@@ -44,6 +44,9 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .view[hidden]{display:none}
 .intro{color:var(--muted);max-width:68ch;margin:0 0 14px}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.controls.groups{gap:8px;margin-bottom:16px}
+.controls.groups .toggle .dot{flex:none}
+.ctl-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
 .toggle{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:12.5px}
 .toggle input{margin:0}
 .swatch{width:10px;height:10px;border-radius:2px;display:inline-block}
@@ -52,7 +55,15 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;align-items:center}
 .legend .k{display:inline-flex;align-items:center;gap:6px}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--muted)}
-.dot.org{background:var(--org)} .dot.build{background:var(--product)} .dot.team{background:var(--surface);border:2px solid var(--muted)} .dot.gate{background:var(--design);border-radius:2px;transform:rotate(45deg)} .dot.leadership{background:var(--org);border-radius:2px} .dot.gtm{background:var(--program)}
+.dot.org{background:var(--org)}
+.dot.build{background:var(--build);border-radius:3px}
+.dot.leadership{background:var(--org);border-radius:2px}
+.dot.gtm{background:var(--program)}
+.dot.product{background:var(--product)}
+.dot.design{background:var(--design)}
+.dot.engineering{background:var(--engineering)}
+.dot.team{background:var(--surface);border:2px solid var(--muted)}
+.dot.gate{background:var(--design);border-radius:2px;transform:rotate(45deg)}
 
 /* ---- cycle map ---- */
 .map-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
@@ -66,11 +77,13 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .ms-row{position:relative;height:72px;grid-column:1 / -1}
 .ms-track{position:absolute;left:190px;right:0;top:0;bottom:0}
 .ms-track::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid var(--line)}
-.ms-group{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:136px}
-.ms-group .dot{width:12px;height:12px;flex:none}
+.ms-group{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:146px}
 .ms{display:block;width:100%;text-align:center;font-size:11.5px;line-height:1.25;padding:0 2px;transition:transform .12s}
-.ms .lbl{color:var(--ink);font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;display:inline-block}
-.ms .lbl::after{content:" ›";opacity:.55}
+.ms .lbl{color:var(--ink);font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.ms .lbl .who{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:600;letter-spacing:.07em;color:var(--muted);white-space:nowrap}
+.ms .lbl .who .dot{width:7px;height:7px;flex:none}
+.ms .lbl .nm::after{content:" ›";opacity:.55}
+.ms .lbl .rep{font-size:9.5px;font-weight:400;color:var(--muted);white-space:nowrap}
 .ms:hover .lbl,.ms:focus-visible .lbl{border-color:var(--line-strong);box-shadow:0 3px 10px rgba(27,36,48,.14)}
 .ms.optional .lbl{color:var(--muted);font-weight:400;border-style:dashed}
 .ms .lbl .cyc{color:var(--muted);font-weight:400}
@@ -79,6 +92,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .line{position:absolute;top:0;bottom:0;width:0;border-left:1px solid var(--line)}
 .line.ms-line{border-left:1.5px dashed var(--line-strong)}
 .line.phase-line{border-left:1px solid var(--line-strong)}
+.tick{position:absolute;top:0;height:16px;width:0;border-left:1.5px dotted var(--line-strong)}
 .lane{display:grid;grid-template-columns:190px repeat(8,1fr);grid-auto-rows:minmax(48px,auto);border-top:1px solid var(--line);position:relative}
 .lane + .lane{border-top:1px solid var(--line-strong)}
 .lane-label{grid-row:1 / span 2;grid-column:1;padding:12px 12px 14px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;position:sticky;left:0;background:var(--surface);z-index:2}
@@ -148,7 +162,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .wk-lane{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;border-top:3px solid var(--lc)}
 .wk-lane h3{font-size:13.5px;margin:0 0 8px;font-weight:600}
 .wk-lane .blk{margin:6px 0}
-.bounds{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.bounds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
 .bound{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .bound h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px;font-weight:600}
 .bound .ms-item{display:flex;gap:8px;align-items:flex-start;padding:8px 26px 8px 6px;border-top:1px solid var(--line);text-align:left;width:100%;position:relative;border-radius:6px}
@@ -229,15 +243,8 @@ body.editing .lane-label:hover{background:var(--hover)}
       <label class="toggle"><input type="checkbox" id="show-c0" checked> <span class="swatch" style="background:var(--product)"></span> This cycle</label>
       <label class="toggle"><input type="checkbox" id="show-c1" checked> <span class="swatch c1"></span> Next-cycle prep (+1)</label>
       <label class="toggle"><input type="checkbox" id="show-cm1" checked> <span class="swatch cm1"></span> Prior-cycle close-out (−1)</label>
-      <div class="legend">
-        <span class="k"><i class="dot org"></i>Whole company</span>
-        <span class="k"><i class="dot build"></i>Build Org</span>
-        <span class="k"><i class="dot team"></i>Team or pod</span>
-        <span class="k"><i class="dot leadership"></i>Leadership</span>
-        <span class="k"><i class="dot gate"></i>Decision</span>
-        <span class="k"><i class="dot gtm"></i>CS &amp; Sales</span>
-      </div>
     </div>
+    <div class="controls groups" id="group-controls"></div>
     <div class="map-wrap"><div class="map" id="map"></div></div>
 
     <div class="arts">
@@ -274,19 +281,23 @@ body.editing .lane-label:hover{background:var(--hover)}
 const D = JSON.parse(document.getElementById('data').textContent);
 const W = D.meta.cycleWeeks;
 const laneById = Object.fromEntries(D.lanes.map(l=>[l.id,l]));
-const KIND_LABEL = {org:'Whole company', build:'Build Org', team:'Team or pod', gate:'Decision', leadership:'Leadership', gtm:'CS & Sales'};
+const GROUPS = D.meta.groups;
+const HIDDEN_LABEL = {team:'Team or pod (not drawn)', gate:'Decision (not drawn)'};
+const KIND_LABEL = Object.assign(Object.fromEntries(GROUPS.map(g=>[g.id,g.name])), HIDDEN_LABEL);
+const KIND_SHORT = Object.fromEntries(GROUPS.map(g=>[g.id,g.short]));
+const shown = new Set(GROUPS.filter(g=>g.default).map(g=>g.id));
 const cycClass = c => c===1?'c1':c===-1?'cm1':'c0';
 const cycLabel = c => c===1?'+1':c===-1?'−1':'';
 const cycName = c => c===1?D.meta.legend.cycle1:c===-1?D.meta.legend.cycleMinus1:D.meta.legend.cycle0;
 const esc = s => String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const pct = b => (b/W*100)+'%';
-const boundaryName = b => b===0?'Start of week 1':b===W?'End of week '+W:'End of week '+b+' / start of week '+(b+1);
+const boundaryName = b => b%1!==0 ? 'Middle of week '+Math.ceil(b)
+  : b===0?'Start of week 1':b===W?'End of week '+W:'End of week '+b+' / start of week '+(b+1);
 
 document.getElementById('version').textContent = D.meta.version;
 
 /* ---------- cycle map ---------- */
-const VIS = new Set(D.meta.visibleKinds || ['org','build','team','gate','leadership','gtm']);
-const visibleMs = D.milestones.filter(m=>m.at!==null && VIS.has(m.kind));
+const visibleMs = () => D.milestones.filter(m=>m.at!==null && shown.has(m.kind));
 
 function laneMapHTML(lanes){
   let h = '';
@@ -296,22 +307,31 @@ function laneMapHTML(lanes){
   h += '<div class="grid week-row"><div class="corner"></div>';
   for(let w=1;w<=W;w++) h += `<div class="wk mono ${w===3?'w3':''}">Week ${w}</div>`;
   h += '</div>';
+  const vis = visibleMs();
   const byAt = {};
-  visibleMs.forEach(m=>{ (byAt[m.at]=byAt[m.at]||[]).push(m); });
+  vis.forEach(m=>{ (byAt[m.at]=byAt[m.at]||[]).push(m); });
   h += `<div class="grid"><div class="ms-row"><div class="ms-track">`;
-  Object.entries(byAt).forEach(([at,list])=>{
-    h += `<div class="ms-group" style="left:${pct(+at)}"><i class="dot ${list[0].kind}"></i>`;
+  Object.keys(byAt).map(Number).sort((a,b)=>a-b).forEach(at=>{
+    const list = byAt[at];
+    h += `<div class="ms-group" style="left:${pct(+at)}">`;
     list.forEach(m=>{
-      h += `<button class="ms ${m.status==='optional'?'optional':''}" data-ms="${m.id}" title="${esc(m.name)}"><span class="lbl">${esc(m.name)}${m.cycle===1?' <span class="cyc">(+1)</span>':''}</span></button>`;
+      h += `<button class="ms ${m.status==='optional'?'optional':''}" data-ms="${m.id}" title="${esc(m.name)}"><span class="lbl">`
+        + `<span class="who"><i class="dot ${m.kind}"></i>${esc(KIND_SHORT[m.kind]||m.kind)}</span>`
+        + `<span class="nm">${esc(m.name)}${m.cycle===1?' <span class="cyc">(+1)</span>':''}</span>`
+        + (m.repeats?`<span class="rep">× ${esc(m.repeats)}</span>`:'')
+        + `</span></button>`;
     });
     h += '</div>';
   });
   h += '</div></div></div>';
   h += '<div class="body"><div class="lines">';
   for(let b=1;b<W;b++){
-    const isMs = visibleMs.some(m=>m.at===b);
+    const isMs = vis.some(m=>m.at===b);
     h += `<div class="line ${b===2?'phase-line':''} ${isMs?'ms-line':''}" style="left:${pct(b)}"></div>`;
   }
+  [...new Set(vis.filter(m=>m.at%1!==0).map(m=>m.at))].forEach(at=>{
+    h += `<div class="tick" style="left:${pct(at)}"></div>`;
+  });
   h += '</div>';
   lanes.forEach(l=>{
     h += `<div class="lane" style="--lc:var(--${l.color});--lsoft:var(--${l.color}-soft)">`;
@@ -357,6 +377,24 @@ function buildMap(){
   if(D.meta.showNotes && D.notes && D.notes.length){ notesEl.innerHTML = `<h2>Notes and recent changes</h2><ul>${D.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`; } else { notesEl.hidden = true; }
 }
 
+function buildGroupControls(){
+  document.getElementById('group-controls').innerHTML = '<span class="ctl-label">Meetings</span>'
+    + GROUPS.map(g=>`<label class="toggle"><input type="checkbox" data-group="${g.id}" ${shown.has(g.id)?'checked':''}> <i class="dot ${g.id}"></i> ${esc(g.name)}</label>`).join('')
+    + '<button class="btn quiet" data-groups="all">All</button><button class="btn quiet" data-groups="none">None</button>';
+}
+function redrawMaps(){ buildMap(); buildWeek(); buildFn(); applyFilters(); sizeMsRows(); }
+document.getElementById('group-controls').addEventListener('change', e=>{
+  const id = e.target.dataset.group; if(!id) return;
+  if(e.target.checked) shown.add(id); else shown.delete(id);
+  redrawMaps();
+});
+document.getElementById('group-controls').addEventListener('click', e=>{
+  const b = e.target.closest('[data-groups]'); if(!b) return;
+  shown.clear();
+  if(b.dataset.groups==='all') GROUPS.forEach(g=>shown.add(g.id));
+  buildGroupControls(); redrawMaps();
+});
+
 function applyFilters(){
   const show = {c0:document.getElementById('show-c0').checked, c1:document.getElementById('show-c1').checked, cm1:document.getElementById('show-cm1').checked};
   document.querySelectorAll('#map .blk').forEach(b=>{
@@ -380,7 +418,7 @@ function msHTML(m){
   <h2>${esc(m.name)}</h2>
   <p class="meta mono" style="color:var(--muted);font-size:12px">${where}</p>
   ${m.detail?`<p>${esc(m.detail)}</p>`:''}
-  <dl class="kv"><dt>Who attends</dt><dd>${esc(m.audience)}</dd><dt>Inputs</dt><dd>${list(m.inputs)}</dd><dt>Outcomes</dt><dd>${list(m.outcomes)}</dd></dl>`;
+  <dl class="kv"><dt>Who attends</dt><dd>${esc(m.audience)}</dd>${m.repeats?`<dt>How often</dt><dd>Once ${esc(m.repeats)}</dd>`:''}<dt>Inputs</dt><dd>${list(m.inputs)}</dd><dt>Outcomes</dt><dd>${list(m.outcomes)}</dd></dl>`;
 }
 function actHTML(a){
   const l = laneById[a.lane];
@@ -413,13 +451,15 @@ document.addEventListener('click', e=>{
 /* ---------- this week ---------- */
 let curWeek = 1, curFn = D.lanes[0].id;
 function blkBtn(a, i){ return `<button class="blk ${a.layer} ${cycClass(a.cycle)}" data-act="${i}">${a.cycle!==0?`<span class="cyc">${cycLabel(a.cycle)}</span>`:''}<span>${esc(a.title)}</span></button>`; }
-function msItem(m){ return `<button class="ms-item" data-ms="${m.id}"><i class="dot ${m.kind}" style="margin-top:4px;flex:none"></i><span><b>${esc(m.name)}</b>${m.cycle===1?' <span class="pill c1">+1</span>':''}<small>${esc(m.audience)}</small></span></button>`; }
+function msItem(m){ return `<button class="ms-item" data-ms="${m.id}"><i class="dot ${m.kind}" style="margin-top:4px;flex:none"></i><span><b>${esc(m.name)}</b>${m.cycle===1?' <span class="pill c1">+1</span>':''}<small>${esc(KIND_SHORT[m.kind]||m.kind)} · ${esc(m.audience)}</small></span></button>`; }
 function buildWeek(){
   document.getElementById('week-pick').innerHTML = Array.from({length:W},(_,i)=>`<button aria-pressed="${i+1===curWeek}" data-week="${i+1}">Week ${i+1}</button>`).join('');
-  const opens = visibleMs.filter(m=>m.at===curWeek-1), closes = visibleMs.filter(m=>m.at===curWeek);
+  const vis = visibleMs();
+  const opens = vis.filter(m=>m.at===curWeek-1), during = vis.filter(m=>m.at===curWeek-0.5), closes = vis.filter(m=>m.at===curWeek);
   const phase = D.meta.phases.find(p=>curWeek>=p.weeks[0]&&curWeek<=p.weeks[1]);
   let h = `<p class="intro"><b>Week ${curWeek}</b> · ${esc(phase.name)}</p>`;
-  h += `<div class="bounds"><div class="bound"><h3>Opens the week</h3>${opens.length?opens.map(msItem).join(''):'<span class="empty">No milestone</span>'}</div><div class="bound"><h3>Closes the week</h3>${closes.length?closes.map(msItem).join(''):'<span class="empty">No milestone</span>'}</div></div>`;
+  const bound = (label, list2) => `<div class="bound"><h3>${label}</h3>${list2.length?list2.map(msItem).join(''):'<span class="empty">No milestone</span>'}</div>`;
+  h += `<div class="bounds">${bound('Opens the week', opens)}${bound('During the week', during)}${bound('Closes the week', closes)}</div>`;
   h += '<div class="wk-cols">';
   D.lanes.forEach(l=>{
     const acts = D.activities.map((a,i)=>({a,i})).filter(x=>x.a.lane===l.id && curWeek>=x.a.weeks[0] && curWeek<=x.a.weeks[1]).sort((x,y)=>(x.a.layer==='primary'?0:1)-(y.a.layer==='primary'?0:1));
@@ -441,14 +481,14 @@ document.getElementById('fn-pick').addEventListener('click', e=>{ const b=e.targ
 
 /* ---------- editing (writers of the Claude artifact only) ---------- */
 const EDIT = { on:false, art:null };
-const KINDS = ['org','build','leadership','gtm','team','gate'];
+const KINDS = GROUPS.map(g=>g.id).concat(Object.keys(HIDDEN_LABEL));
 const toast = (msg, ms=3200) => { const el=document.getElementById('toast'); el.textContent=msg; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true, ms); };
 const field = (label, name, val, type='input', attrs='') => type==='textarea'
   ? `<label>${label}<textarea name="${name}" ${attrs}>${esc(val??'')}</textarea></label>`
   : `<label>${label}<input name="${name}" value="${esc(val??'')}" ${attrs}></label>`;
 const select = (label, name, val, opts) => `<label>${label}<select name="${name}">${opts.map(([v,l])=>`<option value="${v}" ${String(v)===String(val)?'selected':''}>${l}</option>`).join('')}</select></label>`;
 const weekOpts = Array.from({length:W},(_,i)=>[i+1,'Week '+(i+1)]);
-const boundaryOpts = Array.from({length:W+1},(_,b)=>[b, boundaryName(b)]);
+const boundaryOpts = Array.from({length:W*2+1},(_,i)=>i/2).map(b=>[b, boundaryName(b)]);
 const lines = arr => (arr||[]).join('\n');
 const unlines = s => s.split('\n').map(x=>x.trim()).filter(Boolean);
 
@@ -462,6 +502,7 @@ EDIT.form = function(s){
     body = field('Name','name',m.name) + field('Description','detail',m.detail,'textarea') + field('Who attends','audience',m.audience)
       + field('Inputs (one per line)','inputs',lines(m.inputs),'textarea') + field('Outcomes (one per line)','outcomes',lines(m.outcomes),'textarea')
       + `<div class="row3">${select('When','at',m.at,boundaryOpts)}${select('Audience type','kind',m.kind,KINDS.map(k=>[k,KIND_LABEL[k]||k]))}${select('Cycle','cycle',m.cycle,[[0,'This cycle'],[1,'Next cycle (+1)']])}</div>`
+      + field('Repeats (optional, e.g. per opportunity)','repeats',m.repeats||'')
       + select('Status','status',m.status||'',[['','Normal'],['optional','Optional']]); }
   else if(s.kind==='art'){ const a=D.artifacts[s.i]; title='Edit document';
     body = field('Name','name',a.name) + field('Owner','owner',a.owner) + field('Purpose','purpose',a.purpose,'textarea')
@@ -484,6 +525,7 @@ EDIT.apply = function(s, f){
   else if(s.kind==='ms'){ const m=D.milestones.find(x=>x.id===s.id); before=JSON.parse(JSON.stringify(m)); what='milestone "'+m.name+'"';
     if(!g('name')) throw new Error('Name is required.');
     Object.assign(m,{name:g('name'),detail:g('detail'),audience:g('audience'),inputs:unlines(g('inputs')),outcomes:unlines(g('outcomes')),at:+g('at'),kind:g('kind'),cycle:+g('cycle')});
+    if(g('repeats')) m.repeats=g('repeats'); else delete m.repeats;
     if(g('status')) m.status=g('status'); else delete m.status; }
   else if(s.kind==='art'){ const a=D.artifacts[s.i]; before=JSON.parse(JSON.stringify(a)); what='document "'+a.name+'"';
     if(!g('name')) throw new Error('Name is required.');
@@ -568,9 +610,8 @@ document.getElementById('tabs').addEventListener('click', e=>{
   sizeMsRows();
 });
 ['show-c0','show-c1','show-cm1'].forEach(id=>document.getElementById(id).addEventListener('change', applyFilters));
-document.querySelectorAll('.legend .k').forEach(k=>{ const kind=[...k.querySelector('.dot').classList].find(c=>c!=='dot'); if(!VIS.has(kind)) k.remove(); });
 
-buildMap(); buildWeek(); buildFn(); sizeMsRows();
+buildGroupControls(); buildMap(); buildWeek(); buildFn(); sizeMsRows();
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(sizeMsRows);
 window.addEventListener('resize', sizeMsRows);
 try{ const v = localStorage.getItem('jam-view'); const t = v && document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }catch(_){}
