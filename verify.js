@@ -92,6 +92,19 @@ check('every milestone has audience prose and at least one outcome', () => {
   return bad.length ? 'incomplete: ' + bad.map(m => m.id).join(', ') : null;
 });
 
+check('every document either has checkpoints or states a cadence', () => {
+  const bad = D.artifacts.filter(a => !(a.checkpoints && a.checkpoints.length) && !a.cadence);
+  return bad.length ? 'no checkpoints and no cadence: ' + bad.map(a => a.id).join(', ') : null;
+});
+
+check('document checkpoints sit on whole week boundaries', () => {
+  const bad = [];
+  D.artifacts.forEach(a => (a.checkpoints || []).forEach(c => {
+    if (!(typeof c.at === 'number' && c.at >= 0 && c.at <= W && c.at % 1 === 0)) bad.push(a.id + '=' + c.at);
+  }));
+  return bad.length ? bad.join(', ') : null;
+});
+
 /* ---------- build integrity ---------- */
 
 function embedded() {

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jam Cycle Map",
-    "version": "2026-09-21 draft 9",
+    "version": "2026-09-21 draft 10",
     "cycleWeeks": 8,
     "phases": [
       {
@@ -561,6 +561,15 @@
   ],
   "artifacts": [
     {
+      "id": "strategic-brief",
+      "name": "Strategic Brief",
+      "owner": "Product",
+      "cycle": 0,
+      "cadence": "Ongoing; updated as needed",
+      "purpose": "The layer above an opportunity: a long-running mission document carrying the broader strategy for an area. Investment areas live here — change management, workflows, contract review, payment compliance — and opportunities are pulled out of them. We do not always have one, but where it exists the higher-level thinking stays put, so writing an opportunity becomes a matter of choosing which investment to make now rather than rebuilding the case from scratch.",
+      "checkpoints": []
+    },
+    {
       "id": "opportunity",
       "name": "Opportunity",
       "owner": "Product",
@@ -630,7 +639,7 @@
           "readiness": "~80%"
         }
       ],
-      "after": "100% by week 2 of next cycle"
+      "after": "100% by end of week 2 of next cycle"
     },
     {
       "id": "faq",
@@ -659,8 +668,8 @@
           "readiness": "~80%"
         }
       ],
-      "after": "100% by week 2 of next cycle"
+      "after": "100% by end of week 2 of next cycle"
     }
   ],
-  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression.", "Draft 5: Jam Session Kickoff removed (not currently held). Milestone owners removed; outputs renamed outcomes. Enablement sessions described as independent, each covering a set of projects. Milestones and Documents tabs removed.", "Draft 9: Product, Design and Engineering meetings added as toggleable audience groups. Every chip states its own audience, so stacked chips read correctly. Milestones can sit mid-week.", "Draft 9: the design share-out timings (mid-week 3, end-week 3) and Opportunity Proposals (end-week 4, weekly across weeks 3-4) are inferred. The sequence is documented; the dates are not."]
+  "notes": ["Pitch Reactor has been removed.", "The monthly CS Listening Session runs the second Friday of each month, which does not map to cycle weeks, so it is not shown.", "Only whole-company, Build Org, leadership and CS & Sales moments are drawn. Team and pod sessions remain in the data, hidden.", "Opportunity + Pitch Collab in the old diagram is now simply Opportunity intake (weeks 7 and 8).", "Readiness percentages (80% at enablement, tier 100% by week 3) are provisional targets.", "Product Marketing's lane and the post-cycle PMM work (release notes, launch comms) are placeholders pending definition.", "Closing the prior cycle's docs to 100% in weeks 1 and 2 is new and not in the Notion pages yet.", "Engineering Big Room Planning at the end of week 1 was missing from the Figma; it is in the data as a hidden team session.", "Draft 4: Product Delivery Ledger removed from the documents view; it is a live view of the opportunity list, not a document with its own progression.", "Draft 5: Jam Session Kickoff removed (not currently held). Milestone owners removed; outputs renamed outcomes. Enablement sessions described as independent, each covering a set of projects. Milestones and Documents tabs removed.", "Draft 9: Product, Design and Engineering meetings added as toggleable audience groups. Every chip states its own audience, so stacked chips read correctly. Milestones can sit mid-week.", "Draft 9: the design share-out timings (mid-week 3, end-week 3) and Opportunity Proposals (end-week 4, weekly across weeks 3-4) are inferred. The sequence is documented; the dates are not.", "Draft 10: Strategic Brief added above Opportunity. It is a long-running document with no points in the cycle, so it draws as an ongoing band rather than a progression."]
 }

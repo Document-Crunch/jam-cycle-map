@@ -133,6 +133,8 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .art-track{grid-column:2 / -1;position:relative;height:72px;border-bottom:1px solid var(--line)}
 .art-bar{position:absolute;top:26px;height:3px;background:var(--line-strong);border-radius:2px}
 .art-bar.c1{background:repeating-linear-gradient(90deg,var(--line-strong) 0 6px,transparent 6px 10px)}
+.art-bar.ongoing{background:repeating-linear-gradient(90deg,var(--line-strong) 0 2px,transparent 2px 7px)}
+.art-ongoing{position:absolute;top:34px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--muted)}
 .cp{position:absolute;top:20px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;width:92px}
 .cp i{width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--ink);display:block}
 .cp.has-r i{background:var(--ink)}
@@ -374,13 +376,17 @@ function buildMap(){
   for(let w=1;w<=W;w++) g += `<div class="wk mono ${w===3?'w3':''}">Week ${w}</div>`;
   g += '</div><div class="art-grid">';
   D.artifacts.forEach((a,i)=>{
-    const cps = a.checkpoints;
-    const from = Math.min(...cps.map(c=>c.at)), to = Math.max(...cps.map(c=>c.at));
+    const cps = a.checkpoints || [];
     g += `<div class="art-row"><button class="art-label" data-art="${i}"><b>${esc(a.name)}</b><span>${esc(a.owner)}</span>${a.after?`<span class="art-after">→ ${esc(a.after)}</span>`:''}</button><div class="art-track">`;
-    g += `<div class="art-bar ${a.cycle===1?'c1':''}" style="left:${pct(from)};width:calc(${pct(to)} - ${pct(from)})"></div>`;
-    cps.forEach(c=>{
-      g += `<div class="cp ${c.readiness?'has-r':''}" style="left:${pct(c.at)}">${c.readiness?`<b>${esc(c.readiness)}</b>`:''}<i></i><small>${esc(c.label)}</small></div>`;
-    });
+    if(!cps.length){
+      g += `<div class="art-bar ongoing" style="left:0;width:100%"></div><div class="art-ongoing">${esc(a.cadence||'Ongoing')}</div>`;
+    } else {
+      const from = Math.min(...cps.map(c=>c.at)), to = Math.max(...cps.map(c=>c.at));
+      g += `<div class="art-bar ${a.cycle===1?'c1':''}" style="left:${pct(from)};width:calc(${pct(to)} - ${pct(from)})"></div>`;
+      cps.forEach(c=>{
+        g += `<div class="cp ${c.readiness?'has-r':''}" style="left:${pct(c.at)}">${c.readiness?`<b>${esc(c.readiness)}</b>`:''}<i></i><small>${esc(c.label)}</small></div>`;
+      });
+    }
     g += '</div></div>';
   });
   g += '</div>';
@@ -440,8 +446,12 @@ function actHTML(a){
   <h2>${esc(a.title)}</h2><p class="mono" style="color:var(--muted);font-size:12px">${wk}</p><p>${esc(a.detail)}</p>`;
 }
 function artHTML(a){
+  const cps = a.checkpoints || [];
+  const progression = cps.length
+    ? `<ul>${cps.map(c=>`<li>${boundaryName(c.at)}: ${esc(c.label)}${c.readiness?` <b>(${esc(c.readiness)})</b>`:''}</li>`).join('')}${a.after?`<li>${esc(a.after)}</li>`:''}</ul>`
+    : esc(a.cadence||'Ongoing; no fixed points in the cycle');
   return `<div class="eyebrow">Document${a.cycle===1?' · <span class="pill c1">for next cycle</span>':''}</div><h2>${esc(a.name)}</h2>
-  <p>${esc(a.purpose)}</p><dl class="kv"><dt>Owner</dt><dd>${esc(a.owner)}</dd><dt>Progression</dt><dd><ul>${a.checkpoints.map(c=>`<li>${boundaryName(c.at)}: ${esc(c.label)}${c.readiness?` <b>(${esc(c.readiness)})</b>`:''}</li>`).join('')}${a.after?`<li>${esc(a.after)}</li>`:''}</ul></dd></dl>`;
+  <p>${esc(a.purpose)}</p><dl class="kv"><dt>Owner</dt><dd>${esc(a.owner)}</dd><dt>Progression</dt><dd>${progression}</dd></dl>`;
 }
 
 let sel = null;
@@ -519,7 +529,8 @@ EDIT.form = function(s){
       + select('Status','status',m.status||'',[['','Normal'],['optional','Optional']]); }
   else if(s.kind==='art'){ const a=D.artifacts[s.i]; title='Edit document';
     body = field('Name','name',a.name) + field('Owner','owner',a.owner) + field('Purpose','purpose',a.purpose,'textarea')
-      + field('Checkpoints (one per line: week boundary | label | readiness)','checkpoints', a.checkpoints.map(c=>[c.at,c.label,c.readiness||''].join(' | ')).join('\n'),'textarea')
+      + field('Checkpoints (one per line: week boundary | label | readiness; leave empty for an ongoing document)','checkpoints', (a.checkpoints||[]).map(c=>[c.at,c.label,c.readiness||''].join(' | ')).join('\n'),'textarea')
+      + field('Cadence (shown when there are no checkpoints)','cadence',a.cadence||'')
       + field('After the cycle','after',a.after||'') + select('Cycle','cycle',a.cycle,[[0,'This cycle'],[1,'Next cycle (+1)']]); }
   else if(s.kind==='lane'){ const l=laneById[s.id]; title='Edit function';
     body = field('Name','name',l.name) + field('Summary (shown on hover)','summary',l.summary,'textarea'); }
@@ -543,8 +554,8 @@ EDIT.apply = function(s, f){
   else if(s.kind==='art'){ const a=D.artifacts[s.i]; before=JSON.parse(JSON.stringify(a)); what='document "'+a.name+'"';
     if(!g('name')) throw new Error('Name is required.');
     const cps = unlines(g('checkpoints')).map(line=>{ const [at,label,readiness]=line.split('|').map(x=>x.trim()); const c={at:+at,label:label||''}; if(isNaN(c.at)||c.at<0||c.at>W) throw new Error('Each checkpoint must start with a week boundary from 0 to '+W+'.'); if(readiness) c.readiness=readiness; return c; });
-    if(!cps.length) throw new Error('At least one checkpoint is required.');
     Object.assign(a,{name:g('name'),owner:g('owner'),purpose:g('purpose'),checkpoints:cps,cycle:+g('cycle')});
+    if(g('cadence')) a.cadence=g('cadence'); else delete a.cadence;
     if(g('after')) a.after=g('after'); else delete a.after; }
   else if(s.kind==='lane'){ const l=laneById[s.id]; before=JSON.parse(JSON.stringify(l)); what='function "'+l.name+'"';
     if(!g('name')) throw new Error('Name is required.');
