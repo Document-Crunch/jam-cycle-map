@@ -67,7 +67,7 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 
 /* ---- cycle map ---- */
 .map-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.map{min-width:1760px;padding:0 64px 12px 0}
+.map{min-width:920px;padding:0 calc((100% - 190px) / 17) 12px 0}
 .grid{display:grid;grid-template-columns:190px repeat(8,1fr);position:relative}
 .phase-row .phase{grid-row:1;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--muted);padding:12px 10px 4px;border-bottom:1px solid var(--line)}
 .phase-row .phase.p2{border-left:1px solid var(--line-strong)}
@@ -77,7 +77,8 @@ main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
 .ms-row{position:relative;height:72px;grid-column:1 / -1}
 .ms-track{position:absolute;left:190px;right:0;top:0;bottom:0}
 .ms-track::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid var(--line)}
-.ms-group{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:150px}
+.ms-group{position:absolute;top:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:var(--msw)}
+.ms-group.edge-first{transform:none}
 .ms{display:block;width:100%;text-align:center;font-size:11.5px;line-height:1.25;padding:0 2px;transition:transform .12s}
 .ms .lbl{color:var(--ink);font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;display:inline-flex;flex-direction:column;align-items:center;gap:2px}
 .ms .lbl .who{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:600;letter-spacing:.07em;color:var(--muted);white-space:nowrap}
@@ -311,13 +312,14 @@ function laneMapHTML(lanes){
   const vis = visibleMs();
   const byAt = {};
   vis.forEach(m=>{ (byAt[m.at]=byAt[m.at]||[]).push(m); });
-  h += `<div class="grid"><div class="ms-row"><div class="ms-track">`;
+  h += `<div class="grid"><div class="ms-row"><div class="ms-track" style="--msw:calc(100% / ${W} - 10px)">`;
   [...new Set(vis.filter(m=>m.at%1!==0).map(m=>m.at))].forEach(at=>{
     h += `<div class="tick" style="left:${pct(at)}"></div>`;
   });
   Object.keys(byAt).map(Number).sort((a,b)=>a-b).forEach(at=>{
     const list = byAt[at];
-    h += `<div class="ms-group${at%1!==0?' mid':''}" style="left:${pct(+at)}">`;
+    const edge = at===0?' edge-first':'';
+    h += `<div class="ms-group${at%1!==0?' mid':''}${edge}" style="left:${pct(+at)}">`;
     list.forEach(m=>{
       h += `<button class="ms ${m.status==='optional'?'optional':''}" data-ms="${m.id}" title="${esc(m.name)}"><span class="lbl">`
         + `<span class="who"><i class="dot ${m.kind}"></i>${esc(KIND_SHORT[m.kind]||m.kind)}</span>`
