@@ -40,3 +40,7 @@ Owner: Program Management. Source docs live in Notion under Program Management H
 ## Promoting in-page edits to the company page
 
 Ryan edits inside the Claude artifact (Edit toggle). To publish those edits here: save the artifact HTML, run `python3 promote.py that.html`, then `./build.sh`, commit and push.
+
+## JAM working model
+
+A public snapshot of the proposed next iteration is published at https://document-crunch.github.io/jam-cycle-map/working-model/. It includes the main page, focus and collaboration detail panels, and a PDF download. Saved editing remains on the private Sites working version. The current map at the root is unchanged.
