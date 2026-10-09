@@ -10,13 +10,11 @@ window.JAM_OVERVIEW = {
       ]},
       {primary:'Build the next opportunity list',secondary:'',context:'Next cycle',cooldown:true,events:[
         {when:'W3–4',kind:'Self-led',name:'Develop the shared list',note:'PMs work independently and connect with Product leaders. Include ideas from all functions and the business; keep the list visible and work mostly async.'},
-        {when:'W3',kind:'Async',name:'Opportunity list draft check-in',note:'Show the developing list and surface what is missing.'},
         {when:'End W4',kind:'Meeting',name:'Opportunity list walkthrough',note:'Confirm and understand the full candidate set. This starts portfolio selection; it does not select the portfolio.'}
       ]},
       {primary:'Choose the next portfolio',secondary:'',context:'Next cycle',events:[
         {when:'W5–6',kind:'Self-led',name:'Select and stack rank',note:'PMs and the Product team compare the full list, trade priorities against capacity, and form a smaller, stack-ranked portfolio.'},
         {when:'W5 / early W6',kind:'Meeting',name:'Portfolio selection check-in',note:'Compare the emerging choices. The exact slot is still open.'},
-        {when:'Before review',kind:'Async',name:'Prepare the investment proposal',note:'Use light-touch checks to close gaps, without another round of heavy orchestration.'},
         {when:'End W6',kind:'Business meeting',name:'Portfolio Review',note:'The business reviews and commits to the selected investments.'}
       ]},
       {primary:'Enable the front line',secondary:'Next-cycle opportunity intake',context:'Current + next',events:[

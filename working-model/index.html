@@ -16,12 +16,16 @@
 </head>
 <body class="overview-active">
   <a class="skip" href="#main">Skip to cycle views</a>
-  <header class="single-header"><div class="public-download"><a href="jam-cycle-main-page.pdf">Download PDF</a></div><div class="map-editor-controls" hidden><span id="edit-status"></span><button id="edit-map">Edit text</button><button id="save-map">Save</button><button id="cancel-map">Cancel</button></div></header>
+  <header class="single-header"><div class="public-download"><a href="jam-cycle-main-page.pdf">PDF · October 8 snapshot</a></div><div class="map-editor-controls"><span id="edit-status" role="status"></span><button id="edit-map">Edit model</button><button id="save-map" hidden>Save</button><button id="cancel-map" hidden>Cancel</button></div></header>
   <main id="main">
     <section id="page-principles" class="single-section"></section>
     <section id="page-challenge" class="single-section"></section>
+    <nav class="layout-tabs" role="tablist" aria-label="View focus and collaboration"><button role="tab" id="layout-function" aria-selected="true" aria-controls="function-view" data-layout="function">By function</button><button role="tab" id="layout-combined" aria-selected="false" aria-controls="combined-view" data-layout="combined" tabindex="-1">Combined</button></nav>
+    <div id="combined-view" role="tabpanel" aria-labelledby="layout-combined" hidden>
     <section id="page-focus" class="single-section"></section>
     <section id="page-collaboration" class="single-section"></section>
+    </div>
+    <div id="function-view" role="tabpanel" aria-labelledby="layout-function"></div>
   </main>
   <noscript>This map needs JavaScript to show its interactive views. The working model uses four two-week phases: planning; early delivery and opportunity shaping; mature delivery and portfolio selection; finishing and next-opportunity intake.</noscript>
 </body>

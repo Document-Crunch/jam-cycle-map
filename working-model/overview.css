@@ -94,3 +94,13 @@ body.overview-active .open-edges,body.overview-active footer{display:none}
 .team-everybody{--team:#526277;--team-soft:#edf0f5}
 
 .shared-focus-lines{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));border-top:1px solid var(--line);background:var(--paper)}.shared-focus-lines button{grid-column:span 2;text-align:left;padding:14px 16px;font-size:.9375rem;font-weight:600;border-right:1px solid var(--line)}.shared-focus-lines button:hover{text-decoration:underline}
+
+.layout-tabs{display:flex;gap:8px;margin:34px 0 24px;border-bottom:1px solid var(--line)}.layout-tabs button{padding:12px 16px;border-bottom:3px solid transparent;color:var(--muted)}.layout-tabs button[aria-selected="true"]{border-bottom-color:var(--ink);color:var(--ink);font-weight:650}.function-group+.function-group{margin-top:40px}.function-group>h2{color:var(--team);margin-bottom:18px}.function-group>h3{margin:22px 0 12px}.function-group .team-heading{display:none}
+
+.compact-principles{grid-template-columns:repeat(3,minmax(0,1fr))}.calendar-event{position:relative}.editing-map .calendar-event{padding-top:38px}.meeting-drag{position:absolute;top:8px;left:12px;cursor:grab;touch-action:none;font-size:.875rem}.meeting-resize{position:absolute;right:0;top:0;bottom:0;width:22px;display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none;border-left:1px solid var(--line)}.editing-map .calendar-event{padding-right:26px}.add-meeting{margin:0 12px 16px;padding:8px 12px;border:1px solid var(--line);border-radius:4px}.meeting-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:20px}.meeting-controls label{display:grid;gap:6px;font-size:.875rem}.meeting-controls select,.meeting-controls button{padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--paper);font:inherit}@media(max-width:760px){.compact-principles{grid-template-columns:1fr}}
+
+.editing-map .compact-principles p[contenteditable]{min-height:2em}.editing-map .compact-principles p[contenteditable]:empty::before{content:"Add description";color:var(--muted);pointer-events:none}
+
+.map-editor-controls{display:none!important}
+
+.public-download a{display:inline-block;color:var(--muted);font-size:.875rem;padding:8px 0}
