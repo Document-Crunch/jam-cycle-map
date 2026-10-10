@@ -79,7 +79,25 @@
       return `<button class="calendar-event" style="grid-column:${start} / ${end+1};grid-row:${row+1}" data-collaboration="${team}:${i}:${e.id}" aria-label="${t.name}, ${escape(value(`collab.${e.editTeam||team}.${e.id}.when`,e.when))}: ${escape(value(`collab.${e.editTeam||team}.${e.id}.name`,e.name))}">${editing?`<span class="meeting-drag" data-move-meeting="${key}" title="Drag to move">Move</span><span class="meeting-resize" data-resize-meeting="${key}" title="Drag to resize">↔</span>`:''}<span class="calendar-event-meta"><span class="calendar-timing">${text(`collab.${e.editTeam||team}.${e.id}.when`,e.when)}</span>${text(`collab.${e.editTeam||team}.${e.id}.kind`,e.kind,'span','event-kind')}</span>${text(`collab.${e.editTeam||team}.${e.id}.name`,e.name,'b')}${e.agenda?text(`collab.${e.editTeam||team}.${e.id}.focus`,e.focus,'span','weekly-focus'):''}</button>`;
     }).join('');
   }
+  const introDefaults={
+    principles:'Explicit principles guide how we lead our teams.',
+    ownership:'Ryan organizes and drives the program; senior ICs facilitate recurring functional meetings; ICs own the work toward outcomes leadership sets.',
+    focus:'Each function has an established focus for every two-week segment of JAM.',
+    meetings:'Each function has one weekly meeting to check in with the team and advance that focus. No other functional meetings recur by default; leaders add 1:1s and working sessions as needed.',
+    cooldown:'Cooldown now extends to Product and Design as well as Engineering.'
+  };
+  function introItems(){
+    try{const ids=JSON.parse(value('challenge.tweaks.items','null'));if(Array.isArray(ids)&&ids.every(id=>typeof id==='string'&&/^[a-z0-9-]+$/.test(id)))return ids;}catch{}
+    return Object.keys(introDefaults);
+  }
+  function changeIntro(remove){
+    const ids=introItems();let next;
+    if(remove)next=ids.filter(id=>id!==remove);
+    else{const id='change-'+Date.now().toString(36);next=[...ids,id];overrides[`challenge.tweaks.${id}.body`]='Describe what changes.';}
+    overrides['challenge.tweaks.items']=JSON.stringify(next);render();status('Unsaved changes');
+  }
   function render(){
+    document.getElementById('page-introduction').innerHTML=`${text('challenge.changes.title','Latest JAM tweaks: what should feel different','h1')}<ul class="intro-changes">${introItems().map(id=>`<li><div>${text(`challenge.tweaks.${id}.body`,introDefaults[id]||'Describe what changes.','span')}</div>${editing?`<button data-remove-intro="${id}" aria-label="Remove change">Remove</button>`:''}</li>`).join('')}</ul>${editing?'<button class="add-secondary" data-add-intro>+ Add change</button>':''}`;
     document.getElementById('page-principles').innerHTML=`<h2>Principles</h2><div class="compact-principles">${[
       ['Protect the primary focus.','Give the work that matters most the time it needs. Other demands must fit around it or explicitly displace it.'],
       ['Accountability through visibility.','The work and our working conversations show progress, readiness, and where help is needed. Reuse that context instead of manufacturing reports.'],
@@ -87,8 +105,9 @@
     ].map(([title,body],i)=>`<article>${text(`challenge.single.principles.${i===2?3:i}.title`,title,'h3')}${text(`challenge.single.principles.${i===2?3:i}.body`,body,'p')}</article>`).join('')}</div><div class="compact-ownership"><h2>Ownership</h2>${[
       ['Chris, Kai, and Lee','Lead their functions and support each other as needed.'],
       ['Ryan','Facilitate the work toward leadership’s picture of success, helping teams move independently and resolve gaps.'],
+      ['Leaders and senior ICs','Facilitate recurring functional meetings.'],
       ['ICs','Own the work and drive it to the agreed outcomes.']
-    ].map(([title,body],i)=>`<p>${text(`challenge.single.ownership.${i}.title`,title,'strong')} — ${text(`challenge.single.ownership.${i}.body`,body)}</p>`).join('')}</div>`;
+    ].map(([title,body],i)=>`<p>${text(`challenge.single.ownership.${i===2?3:i===3?2:i}.title`,title,'strong')} — ${text(`challenge.single.ownership.${i===2?3:i===3?2:i}.body`,body)}</p>`).join('')}</div>`;
     const C=window.JAM_CHALLENGE;
     document.getElementById('page-challenge').innerHTML=`<div class="challenge-title">${text('challenge.title',C.title,'h2')}</div><div class="challenge-cards">${C.cards.map((c,i)=>`<article>${text(`challenge.${i}.title`,c.title,'h3')}${text(`challenge.${i}.response`,c.response,'p')}</article>`).join('')}</div>`;
     document.getElementById('page-focus').innerHTML=`<h2>Focus</h2><div class="calendar-scroll"><div class="calendar-inner">${weekHeader()}${teamOrder.filter(id=>id!=='everybody').map(id=>{const t=O[id];return `<section class="focus-lane team-${id}"><button class="team-heading" data-focus-all="${id}">${t.name}</button><div class="focus-week-grid">${t.blocks.map((b,i)=>`<button class="focus-cell ${b.cooldown?'has-cooldown':''}" data-focus="${id}:${i}" aria-label="${t.name}, weeks ${i*2+1}–${i*2+2}: focus"><span class="focus-priority"><span class="focus-priority-label">Primary</span>${focusText(id,i,'primary',b,'strong','primary-text')}</span>${renderSecondaries(id,i)}<span class="focus-meta">${focusText(id,i,'context',b,'span','overview-context')}</span></button>`).join('')}</div></section>`;}).join('')}</div></div>`;
@@ -145,6 +164,8 @@
     if(editing&&e.detail===0&&b.matches(itemButtonSelector)&&document.activeElement?.closest('[contenteditable]')&&b.contains(document.activeElement))return;
     if(editing&&b.dataset.addMeeting){addMeeting(b.dataset.addMeeting);return;}
     if(editing&&b.dataset.deleteMeeting){updateMeeting(b.dataset.deleteMeeting,{deleted:true});return;}
+    if(editing&&b.hasAttribute('data-add-intro')){changeIntro();return;}
+    if(editing&&b.dataset.removeIntro){changeIntro(b.dataset.removeIntro);return;}
     if(b.dataset.layout){layout=b.dataset.layout;applyLayout();return;}
     if(editing&&b.dataset.addSecondary){const [team,i]=b.dataset.addSecondary.split(':');changeSecondaries(team,Number(i));return;}
     if(editing&&b.dataset.removeSecondary){const [team,i,id]=b.dataset.removeSecondary.split(':');changeSecondaries(team,Number(i),id);return;}

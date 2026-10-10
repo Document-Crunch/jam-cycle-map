@@ -101,6 +101,8 @@ body.overview-active .open-edges,body.overview-active footer{display:none}
 
 .editing-map .compact-principles p[contenteditable]{min-height:2em}.editing-map .compact-principles p[contenteditable]:empty::before{content:"Add description";color:var(--muted);pointer-events:none}
 
-.map-editor-controls{display:none!important}
+#page-introduction>h1{font-size:2rem;line-height:1.25;margin-bottom:22px}.model-introduction{max-width:1200px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 36px}.model-introduction h3{font-size:1.05rem;margin-bottom:6px}.model-introduction p{line-height:1.6}#page-principles>h2,.compact-ownership>h2,.challenge-title>h2{font-size:1.5rem;line-height:1.3;letter-spacing:-.035em;font-weight:700}@media(max-width:760px){.model-introduction{grid-template-columns:1fr;gap:20px}}
 
-.public-download a{display:inline-block;color:var(--muted);font-size:.875rem;padding:8px 0}
+.intro-champion{font-size:.875rem;font-weight:650;color:var(--muted);margin-bottom:8px}.intro-changes{max-width:1200px;margin:0;padding-left:22px}.intro-changes li{padding-left:4px;line-height:1.6}.intro-changes li+li{margin-top:12px}.editing-map .intro-changes li{position:relative;padding-right:90px}.intro-changes button{position:absolute;right:0;top:0;padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:.875rem}
+
+.map-editor-controls{display:none!important}.public-download a{display:inline-block;color:var(--muted);font-size:.875rem;padding:8px 0}
